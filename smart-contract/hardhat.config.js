@@ -5,12 +5,13 @@ const { PRIVATE_KEY } = process.env;
 
 module.exports = {
   solidity: {
-    version: "0.8.28",
+    version: "0.8.24",
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
       },
+      evmVersion: "cancun",
       viaIR: true,
     },
   },

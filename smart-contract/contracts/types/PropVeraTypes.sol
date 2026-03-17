@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 /// @title PropVeraTypes
 /// @notice All shared structs for the PropVera protocol

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -60,7 +60,7 @@ contract PropVera is
     constructor(
         address realEstateTokenAddr,
         address _usdcToken
-    ) ERC721("PropVeraAssetToken", "PVT") {
+    ) ERC721("PropVeraAssetToken", "PVT") Ownable(msg.sender) {
         realEstateToken = PropVeraFractionalToken(realEstateTokenAddr);
         usdcToken = IERC20(_usdcToken);
     }
@@ -406,7 +406,7 @@ contract PropVera is
         address to,
         uint256 tokenId
     ) internal override(AssetMarketplace) {
-        _approve(to, tokenId);
+        _approve(to, tokenId, msg.sender);
     }
 
     function _mintAssetToken(
@@ -425,10 +425,6 @@ contract PropVera is
         uint256 tokenId
     ) public view override(ERC721URIStorage) returns (string memory) {
         return ERC721URIStorage.tokenURI(tokenId);
-    }
-
-    function _burn(uint256 tokenId) internal override(ERC721URIStorage) {
-        ERC721URIStorage._burn(tokenId);
     }
 
     function supportsInterface(

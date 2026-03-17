@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -36,7 +36,7 @@ contract PropVeraFractionalToken is ERC20, Ownable {
     error ZeroAddress();
 
     // ── Constructor ───────────────────────────────────────────────────────────
-    constructor() ERC20("PropVeraFractionalToken", "PVF") {}
+    constructor() ERC20("PropVeraFractionalToken", "PVF") Ownable(msg.sender) {}
 
     // ── Modifiers ─────────────────────────────────────────────────────────────
 
@@ -46,8 +46,8 @@ contract PropVeraFractionalToken is ERC20, Ownable {
     ///      could short-circuit after the first; the pattern is identical in
     ///      the non-owner path while being cleaner for the compiler to optimise.
     modifier onlyOwnerOrPropVera() {
-        address _owner = owner();     // 1 SLOAD
-        address _pv    = propVera;    // 1 SLOAD
+        address _owner = owner(); // 1 SLOAD
+        address _pv = propVera; // 1 SLOAD
         if (msg.sender != _owner && msg.sender != _pv) revert NotAuthorized();
         _;
     }
@@ -75,7 +75,10 @@ contract PropVeraFractionalToken is ERC20, Ownable {
 
     /// @notice Mint tokens using a human-readable quantity (whole tokens).
     /// @dev    Convenience function for admin / testing purposes only.
-    function mintEth(address to, uint256 amountInEth) external onlyOwnerOrPropVera {
+    function mintEth(
+        address to,
+        uint256 amountInEth
+    ) external onlyOwnerOrPropVera {
         _mint(to, amountInEth * TOKEN_UNIT);
     }
 

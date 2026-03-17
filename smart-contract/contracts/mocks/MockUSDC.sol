@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -34,7 +34,7 @@ contract MockUSDC is ERC20, Ownable {
     event MinterSet(address indexed account, bool enabled);
 
     // ── Constructor ───────────────────────────────────────────────────────────
-    constructor() ERC20("Mock USDC", "USDC") {
+    constructor() ERC20("Mock USDC", "USDC") Ownable(msg.sender) {
         // Deployer is a minter by default so existing test scripts work as-is.
         isMinter[msg.sender] = true;
         emit MinterSet(msg.sender, true);
