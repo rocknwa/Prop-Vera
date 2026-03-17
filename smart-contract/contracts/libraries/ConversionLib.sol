@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.28;
 
 /// @title ConversionLib
 /// @notice Pure helper functions for converting between human-readable ETH
