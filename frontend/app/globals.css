@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  --radius: 0.5rem;
+  --font-geist-sans: "Inter", sans-serif;
+  --font-geist-mono: "JetBrains Mono", monospace;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-border;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted/10;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted/80;
+}
