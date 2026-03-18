@@ -1,24 +1,31 @@
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
 module.exports = buildModule("PropVeraModule", (m) => {
-  // Deploy PropVeraFractionalToken contract
+  // ── Token contracts ─────────────────────────────────────────────────────────
   const propVeraFractionalToken = m.contract("PropVeraFractionalToken", []);
-
-  // Deploy MockUSDC contract
   const mockUSDC = m.contract("MockUSDC", []);
 
-  const admin1 = "0xAD18041B8Cd45A154224020228300ACa918C3F35";
-  const admin2 = "0x28b7D4ee5c1B48A34ec784D336fbC4f965c02137";
-
-  // Deploy PropVera contract with the address of PropVeraFractionalToken contract
+  // ── Core protocol ───────────────────────────────────────────────────────────
   const propVera = m.contract("PropVera", [propVeraFractionalToken, mockUSDC]);
 
-  // Set the PropVera address in the PropVeraFractionalToken contract
-  m.call(propVeraFractionalToken, "setPropVera", [propVera]);
+  // ── Post-deploy wiring ──────────────────────────────────────────────────────
+  // Lock the PropVera address into the fractional token (one-time, irreversible)
+  m.call(propVeraFractionalToken, "setPropVera", [propVera], {
+    id: "SetPropVeraAddress",
+  });
 
-  // Add admins with unique IDs
+  // Authorise MockUSDC to mint (deployer is minter by default; grant PropVera too)
+  m.call(mockUSDC, "setMinter", [propVera, true], {
+    id: "GrantPropVeraMinter",
+  });
+
+  // ── Admins ──────────────────────────────────────────────────────────────────
+  const admin1 = "0xEA05b4b861751b3e3C2BF065Ce71fc84532010Af";
+  const admin2 = "0xA10926725dE0075cB061ad8005F3d542FF54705e";
+
   m.call(propVera, "addAdmin", [admin1], { id: "AddAdmin1" });
   m.call(propVera, "addAdmin", [admin2], { id: "AddAdmin2" });
 
+  // ── Exports ─────────────────────────────────────────────────────────────────
   return { propVeraFractionalToken, mockUSDC, propVera };
 });
