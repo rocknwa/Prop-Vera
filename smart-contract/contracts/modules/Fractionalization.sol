@@ -27,17 +27,38 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
 
     // ── Constants ─────────────────────────────────────────────────────────────
     uint256 internal constant _PERCENTAGE_SCALE = 1e18;
-    uint256 internal constant _PERCENT_DENOM    = 100;
-    uint256 internal constant _START_ID         = 1;
+    uint256 internal constant _PERCENT_DENOM = 100;
+    uint256 internal constant _START_ID = 1;
 
     // ── Abstract references ───────────────────────────────────────────────────
-    function _usdc()  internal view virtual returns (IERC20);
+    function _usdc() internal view virtual returns (IERC20);
+
     function _owner() internal view virtual returns (address);
-    function _ownerOf721(uint256 tokenId) internal view virtual returns (address);
-    function _getApproved721(uint256 tokenId) internal view virtual returns (address);
-    function _isApprovedForAll721(address owner, address operator) internal view virtual returns (bool);
-    function _transfer721(address from, address to, uint256 tokenId) internal virtual;
-    function _realEstateToken() internal view virtual returns (PropVeraFractionalToken);
+
+    function _ownerOf721(
+        uint256 tokenId
+    ) internal view virtual returns (address);
+
+    function _getApproved721(
+        uint256 tokenId
+    ) internal view virtual returns (address);
+
+    function _isApprovedForAll721(
+        address owner,
+        address operator
+    ) internal view virtual returns (bool);
+
+    function _transfer721(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual;
+
+    function _realEstateToken()
+        internal
+        view
+        virtual
+        returns (PropVeraFractionalToken);
 
     modifier onlyAdminFrac() {
         if (!isAdmin[msg.sender]) revert PropVeraErrors.NotAdmin(msg.sender);
@@ -49,32 +70,37 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
     /// @notice Admin: tokenise an asset into fractional shares.
     /// @param tokenId         The NFT to fractionalize.
     /// @param totalTokensInEth Total shares to issue (whole tokens, converted to wei).
-    function createFractionalAsset(uint256 tokenId, uint256 totalTokensInEth) external onlyAdminFrac {
+    function createFractionalAsset(
+        uint256 tokenId,
+        uint256 totalTokensInEth
+    ) external onlyAdminFrac {
         PropVeraTypes.RealEstateAsset storage asset = realEstateAssets[tokenId];
 
         // Cache SLOADs
-        address seller   = asset.seller;
-        bool sold        = asset.sold;
-        bool verified    = asset.verified;
-        uint256 price    = asset.price;
+        address seller = asset.seller;
+        bool sold = asset.sold;
+        bool verified = asset.verified;
+        uint256 price = asset.price;
 
         if (seller == address(0)) revert PropVeraErrors.AssetDoesNotExist();
-        if (sold)                 revert PropVeraErrors.AssetAlreadySold();
-        if (!verified)            revert PropVeraErrors.AssetNotVerified();
-        if (_ownerOf721(tokenId) != seller) revert PropVeraErrors.SellerNotOwner();
+        if (sold) revert PropVeraErrors.AssetAlreadySold();
+        if (!verified) revert PropVeraErrors.AssetNotVerified();
+        if (_ownerOf721(tokenId) != seller)
+            revert PropVeraErrors.SellerNotOwner();
         if (
             _getApproved721(tokenId) != address(this) &&
             !_isApprovedForAll721(seller, address(this))
         ) revert PropVeraErrors.ContractNotApproved();
 
-        uint256 totalTokensInWei  = ConversionLib.tokenToWei(totalTokensInEth);
-        uint256 pricePerTokenInWei = (price * ConversionLib.TOKEN_UNIT) / totalTokensInWei;
+        uint256 totalTokensInWei = ConversionLib.tokenToWei(totalTokensInEth);
+        uint256 pricePerTokenInWei = (price * ConversionLib.TOKEN_UNIT) /
+            totalTokensInWei;
 
         fractionalAssets[tokenId] = PropVeraTypes.FractionalAsset({
-            tokenId:       tokenId,
-            totalTokens:   totalTokensInWei,
+            tokenId: tokenId,
+            totalTokens: totalTokensInWei,
             pricePerToken: pricePerTokenInWei,
-            seller:        payable(seller)
+            seller: payable(seller)
         });
 
         _realEstateToken().mint(address(this), totalTokensInWei);
@@ -88,19 +114,26 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
     }
 
     /// @notice Buy fractional shares of a tokenized asset.
-    function buyFractionalAsset(uint256 tokenId, uint256 numTokensInEth) external nonReentrant {
+    function buyFractionalAsset(
+        uint256 tokenId,
+        uint256 numTokensInEth
+    ) external nonReentrant {
         if (numTokensInEth == 0) revert PropVeraErrors.InvalidAmount();
 
-        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[tokenId];
+        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[
+            tokenId
+        ];
 
         // Cache
         uint256 pricePerToken = fAsset.pricePerToken;
-        uint256 available     = fAsset.totalTokens;
+        uint256 available = fAsset.totalTokens;
 
         uint256 numTokensInWei = ConversionLib.tokenToWei(numTokensInEth);
-        if (available < numTokensInWei) revert PropVeraErrors.InsufficientTokens();
+        if (available < numTokensInWei)
+            revert PropVeraErrors.InsufficientTokens();
 
-        uint256 totalPriceInWei = (numTokensInWei * pricePerToken) / ConversionLib.TOKEN_UNIT;
+        uint256 totalPriceInWei = (numTokensInWei * pricePerToken) /
+            ConversionLib.TOKEN_UNIT;
 
         // CEI: update state before transfers
         fAsset.totalTokens = available - numTokensInWei;
@@ -118,8 +151,12 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
         _realEstateToken().safeTransfer(msg.sender, numTokensInWei);
 
         // Auto-complete: if buyer now holds 100% of total supply
-        uint256 totalSupplyWei = (realEstateAssets[tokenId].price * ConversionLib.TOKEN_UNIT) / pricePerToken;
-        if (fAsset.totalTokens == 0 && buyerFractions[msg.sender][tokenId] == totalSupplyWei) {
+        uint256 totalSupplyWei = (realEstateAssets[tokenId].price *
+            ConversionLib.TOKEN_UNIT) / pricePerToken;
+        if (
+            fAsset.totalTokens == 0 &&
+            buyerFractions[msg.sender][tokenId] == totalSupplyWei
+        ) {
             realEstateAssets[tokenId].sold = true;
             _transfer721(realEstateAssets[tokenId].seller, msg.sender, tokenId);
         }
@@ -135,18 +172,26 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
     /// @notice Return fractional tokens and receive a USDC refund.
     /// @dev    Requires admin to have first enabled withdrawals via
     ///         `setBuyerCanWithdraw(tokenId, true)`.
-    function cancelFractionalAssetPurchase(uint256 tokenId, uint256 numTokensInEth) external nonReentrant {
-        if (!buyerCanWithdraw[tokenId])               revert PropVeraErrors.CannotWithdrawYet();
+    function cancelFractionalAssetPurchase(
+        uint256 tokenId,
+        uint256 numTokensInEth
+    ) external nonReentrant {
+        if (!buyerCanWithdraw[tokenId])
+            revert PropVeraErrors.CannotWithdrawYet();
 
         uint256 ownedWei = buyerFractions[msg.sender][tokenId];
-        if (ownedWei == 0)                            revert PropVeraErrors.NoTokensOwned();
+        if (ownedWei == 0) revert PropVeraErrors.NoTokensOwned();
 
         uint256 numTokensInWei = ConversionLib.tokenToWei(numTokensInEth);
-        if (ownedWei < numTokensInWei)                revert PropVeraErrors.NotEnoughTokensOwned();
+        if (ownedWei < numTokensInWei)
+            revert PropVeraErrors.NotEnoughTokensOwned();
 
-        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[tokenId];
+        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[
+            tokenId
+        ];
         uint256 pricePerToken = fAsset.pricePerToken;
-        uint256 refundInWei   = (numTokensInWei * pricePerToken) / ConversionLib.TOKEN_UNIT;
+        uint256 refundInWei = (numTokensInWei * pricePerToken) /
+            ConversionLib.TOKEN_UNIT;
 
         // CEI: state first
         fAsset.totalTokens += numTokensInWei;
@@ -154,7 +199,11 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
         fractionalPayments[tokenId] -= refundInWei;
 
         // Transfers
-        _realEstateToken().safeTransferFrom(msg.sender, address(this), numTokensInWei);
+        _realEstateToken().safeTransferFrom(
+            msg.sender,
+            address(this),
+            numTokensInWei
+        );
         _usdc().safeTransfer(msg.sender, refundInWei);
 
         emit PropVeraEvents.AssetCanceled(tokenId, msg.sender);
@@ -162,47 +211,63 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
 
     /// @notice Admin: push USDC dividends to all current fractional holders.
     /// @dev    ⚠ PUSH PATTERN — loop over all holders. See module-level note.
-    function distributeFractionalDividends(uint256 tokenId, uint256 amountInEth)
-        external
-        onlyAdminFrac
-        nonReentrant
-    {
-        if (fractionalAssets[tokenId].seller == address(0)) revert PropVeraErrors.FractionalAssetDoesNotExist();
-        if (amountInEth == 0)                               revert PropVeraErrors.InvalidAmount();
+    function distributeFractionalDividends(
+        uint256 tokenId,
+        uint256 amountInEth
+    ) external onlyAdminFrac nonReentrant {
+        if (fractionalAssets[tokenId].seller == address(0))
+            revert PropVeraErrors.FractionalAssetDoesNotExist();
+        if (amountInEth == 0) revert PropVeraErrors.InvalidAmount();
 
         uint256 amountInWei = ConversionLib.usdcToWei(amountInEth);
-        if (_usdc().balanceOf(address(this)) < amountInWei) revert PropVeraErrors.InsufficientUSDCBalance();
+        if (_usdc().balanceOf(address(this)) < amountInWei)
+            revert PropVeraErrors.InsufficientUSDCBalance();
 
         // Determine total issued tokens
-        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[tokenId];
+        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[
+            tokenId
+        ];
         uint256 totalTokensInWei;
         if (realEstateAssets[tokenId].sold) {
-            totalTokensInWei = (realEstateAssets[tokenId].price * ConversionLib.TOKEN_UNIT) / fAsset.pricePerToken;
+            // When the NFT is fully sold, derive the total supply from the NFT price and the fractional token price.
+            totalTokensInWei =
+                (realEstateAssets[tokenId].price * ConversionLib.TOKEN_UNIT) /
+                fAsset.pricePerToken;
         } else {
+            // Compute total issued tokens from the remaining tokens plus all buyer balances.
+            // This avoids relying on a single buyer being non-zero (which can happen after transfers).
             address[] storage buyers = fractionalAssetBuyers[tokenId];
-            uint256 firstHolderBal   = buyers.length > 0 ? buyerFractions[buyers[0]][tokenId] : 0;
-            totalTokensInWei         = fAsset.totalTokens + firstHolderBal;
+            uint256 totalBuyerBal;
+            for (uint256 i; i < buyers.length; ) {
+                totalBuyerBal += buyerFractions[buyers[i]][tokenId];
+                unchecked {
+                    ++i;
+                }
+            }
+            totalTokensInWei = fAsset.totalTokens + totalBuyerBal;
         }
         if (totalTokensInWei == 0) revert PropVeraErrors.NoTokensIssued();
 
         address[] storage buyerList = fractionalAssetBuyers[tokenId];
         uint256 len = buyerList.length;
 
-        address[] memory buyersOut  = new address[](len);
+        address[] memory buyersOut = new address[](len);
         uint256[] memory amountsOut = new uint256[](len);
         uint256 distributed;
 
         for (uint256 i; i < len; ) {
-            address buyer      = buyerList[i];          // 1 SLOAD per iteration
-            uint256 holderBal  = buyerFractions[buyer][tokenId]; // 1 SLOAD
+            address buyer = buyerList[i]; // 1 SLOAD per iteration
+            uint256 holderBal = buyerFractions[buyer][tokenId]; // 1 SLOAD
             if (holderBal > 0) {
-                uint256 share  = (amountInWei * holderBal) / totalTokensInWei;
-                buyersOut[i]   = buyer;
-                amountsOut[i]  = ConversionLib.usdcFromWei(share);
-                distributed    += share;
+                uint256 share = (amountInWei * holderBal) / totalTokensInWei;
+                buyersOut[i] = buyer;
+                amountsOut[i] = ConversionLib.usdcFromWei(share);
+                distributed += share;
                 _usdc().safeTransfer(buyer, share);
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
 
         // Return unallocated dust to the contract's own balance (no-op transfer to self)
@@ -210,61 +275,82 @@ abstract contract Fractionalization is PropVeraStorage, ReentrancyGuard {
             // Dust stays in the contract — no self-transfer required.
         }
 
-        emit PropVeraEvents.FractionalDividendsDistributed(tokenId, amountInEth, buyersOut, amountsOut);
+        emit PropVeraEvents.FractionalDividendsDistributed(
+            tokenId,
+            amountInEth,
+            buyersOut,
+            amountsOut
+        );
     }
 
     /// @notice Admin toggle: allow/block fractional refunds for a given asset.
-    function setBuyerCanWithdraw(uint256 tokenId, bool canWithdraw) external onlyAdminFrac {
+    function setBuyerCanWithdraw(
+        uint256 tokenId,
+        bool canWithdraw
+    ) external onlyAdminFrac {
         buyerCanWithdraw[tokenId] = canWithdraw;
     }
 
     // ── View functions ────────────────────────────────────────────────────────
 
-    function getBuyerFractions(address buyer, uint256 tokenId) external view returns (uint256) {
+    function getBuyerFractions(
+        address buyer,
+        uint256 tokenId
+    ) external view returns (uint256) {
         return ConversionLib.tokenFromWei(buyerFractions[buyer][tokenId]);
     }
 
-    function getFractionalAssetBuyersList(uint256 tokenId) external view returns (address[] memory) {
+    function getFractionalAssetBuyersList(
+        uint256 tokenId
+    ) external view returns (address[] memory) {
         return fractionalAssetBuyers[tokenId];
     }
 
-    function getFractionalPayments(uint256 tokenId) external view returns (uint256) {
+    function getFractionalPayments(
+        uint256 tokenId
+    ) external view returns (uint256) {
         return ConversionLib.usdcFromWei(fractionalPayments[tokenId]);
     }
 
-    function fetchFractionalAssetBuyers(uint256 tokenId)
-        external
-        view
-        returns (PropVeraTypes.FractionalBuyer[] memory)
-    {
-        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[tokenId];
-        if (fAsset.seller == address(0)) revert PropVeraErrors.FractionalAssetDoesNotExist();
+    function fetchFractionalAssetBuyers(
+        uint256 tokenId
+    ) external view returns (PropVeraTypes.FractionalBuyer[] memory) {
+        PropVeraTypes.FractionalAsset storage fAsset = fractionalAssets[
+            tokenId
+        ];
+        if (fAsset.seller == address(0))
+            revert PropVeraErrors.FractionalAssetDoesNotExist();
 
         address[] storage buyers = fractionalAssetBuyers[tokenId];
-        uint256 len              = buyers.length;
+        uint256 len = buyers.length;
 
         uint256 totalTokensInWei;
         if (realEstateAssets[tokenId].sold) {
-            totalTokensInWei = (realEstateAssets[tokenId].price * ConversionLib.TOKEN_UNIT) / fAsset.pricePerToken;
+            totalTokensInWei =
+                (realEstateAssets[tokenId].price * ConversionLib.TOKEN_UNIT) /
+                fAsset.pricePerToken;
         } else {
-            uint256 firstBal  = len > 0 ? buyerFractions[buyers[0]][tokenId] : 0;
-            totalTokensInWei  = fAsset.totalTokens + firstBal;
+            uint256 firstBal = len > 0 ? buyerFractions[buyers[0]][tokenId] : 0;
+            totalTokensInWei = fAsset.totalTokens + firstBal;
         }
 
-        PropVeraTypes.FractionalBuyer[] memory result = new PropVeraTypes.FractionalBuyer[](len);
+        PropVeraTypes.FractionalBuyer[]
+            memory result = new PropVeraTypes.FractionalBuyer[](len);
 
         for (uint256 i; i < len; ) {
-            address addr       = buyers[i];
-            uint256 bal        = buyerFractions[addr][tokenId];
-            uint256 pct        = totalTokensInWei > 0
+            address addr = buyers[i];
+            uint256 bal = buyerFractions[addr][tokenId];
+            uint256 pct = totalTokensInWei > 0
                 ? (bal * _PERCENT_DENOM * _PERCENTAGE_SCALE) / totalTokensInWei
                 : 0;
             result[i] = PropVeraTypes.FractionalBuyer({
-                buyer:     addr,
+                buyer: addr,
                 numTokens: ConversionLib.tokenFromWei(bal),
                 percentage: pct
             });
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         return result;
     }
