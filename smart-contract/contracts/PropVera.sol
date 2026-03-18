@@ -406,7 +406,9 @@ contract PropVera is
         address to,
         uint256 tokenId
     ) internal override(AssetMarketplace) {
-        _approve(to, tokenId, msg.sender);
+        // In OZ v5, _approve requires an auth address; use the token owner to
+        // satisfy the ERC721 approval checks.
+        _approve(to, tokenId, _ownerOf721(tokenId));
     }
 
     function _mintAssetToken(
