@@ -1,24 +1,24 @@
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "wagmi";
 
-// Polkadot Hub Testnet Configuration
+// Polkadot Hub Testnet Configuration (Chain ID: 420420417)
 const polkadotHubTestnet = {
-  id: 5135,
+  id: 420420417,
   name: "Polkadot Hub Testnet",
   network: "polkadot-hub-testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "Testnet Token",
-    symbol: "TEST",
+    name: "Polkadot",
+    symbol: "POL",
   },
   rpcUrls: {
-    public: { http: ["https://testnet-rpc.polkadot.io"] },
-    default: { http: ["https://testnet-rpc.polkadot.io"] },
+    public: { http: ["https://rpc.testnet.immutable.com"] },
+    default: { http: ["https://rpc.testnet.immutable.com"] },
   },
   blockExplorers: {
     default: {
-      name: "Polkadot Explorer",
-      url: "https://testnet.polkadot.io",
+      name: "Polkadot Hub Explorer",
+      url: "https://explorer.testnet.immutable.com",
     },
   },
   testnet: true,
@@ -31,7 +31,6 @@ export const config = getDefaultConfig({
   transports: {
     [polkadotHubTestnet.id]: http(),
   },
-  ssr: true,
 });
 
 declare module "wagmi" {
