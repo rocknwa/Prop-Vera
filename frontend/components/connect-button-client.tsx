@@ -1,19 +1,16 @@
 "use client";
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import ConnectButton to prevent SSR issues
+const DynamicConnectButton = dynamic(
+  () => import("@rainbow-me/rainbowkit").then((mod) => ({ default: mod.ConnectButton })),
+  {
+    ssr: false,
+    loading: () => <div className="h-10 w-32 bg-muted rounded-lg animate-pulse" />,
+  }
+);
 
 export function ConnectButtonClient() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Only render after hydration to ensure WagmiProvider is ready
-  if (!mounted) {
-    return <div className="h-10 w-32 bg-muted rounded-lg" />;
-  }
-
-  return <ConnectButton />;
+  return <DynamicConnectButton />;
 }

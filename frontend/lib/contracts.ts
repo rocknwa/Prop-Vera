@@ -3,23 +3,17 @@ import { PROPVERA_ABI } from "./abis/propvera";
 import { MOCKUSDC_ABI } from "./abis/mockusdc";
 import { FRACTIONAL_TOKEN_ABI } from "./abis/fractional";
 
-// Contract Addresses
-export const PROPVERA_ADDRESS =
-  (process.env.NEXT_PUBLIC_PROPVERA_ADDRESS as `0x${string}`) ||
-  "0xdF6A1Da673B623D9e1c6c538f4653d4429284429";
-
-export const MOCKUSDC_ADDRESS =
-  (process.env.NEXT_PUBLIC_USDC_ADDRESS as `0x${string}`) ||
-  "0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06";
-
-export const FRACTIONAL_TOKEN_ADDRESS =
-  (process.env.NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS as `0x${string}`) ||
-  "0x1807F7c4984f5188e948C2e828fadE1b2F0011eb";
+// Contract Addresses - exported with exact names for imports
+export const PROPVERA_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_PROPVERA_ADDRESS as `0x${string}`;
+export const PROPVERA_FRACTIONAL_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS as `0x${string}`;
+export const MOCK_USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS as `0x${string}`;
 
 export const CHAIN_ID = 420420417;
 
-// Re-export ABIs
-export { PROPVERA_ABI, MOCKUSDC_ABI, FRACTIONAL_TOKEN_ABI };
+// Re-export ABIs with proper names
+export { PROPVERA_ABI };
+export { MOCKUSDC_ABI as MOCK_USDC_ABI };
+export { FRACTIONAL_TOKEN_ABI as PROPVERA_FRACTIONAL_TOKEN_ABI };
 
 // Error message mapping for contract reverts
 export const CONTRACT_ERROR_MESSAGES: Record<string, string> = {

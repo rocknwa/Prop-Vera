@@ -29,7 +29,7 @@ const polkadotHubTestnet = {
 
 export const config = getDefaultConfig({
   appName: "PropVera",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "test-project",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   chains: [polkadotHubTestnet as any],
   transports: {
     [polkadotHubTestnet.id]: http(),
