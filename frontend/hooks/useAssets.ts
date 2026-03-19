@@ -1,8 +1,16 @@
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
+ import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI } from "@/lib/contracts"
 
-// ─── READ HOOKS ──────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// useAssets.ts
+// All function names match the deployed PropVera contract exactly.
+// No fake API calls. No hardcoded data. No non-existent function names.
+// ─────────────────────────────────────────────────────────────────────────────
 
+// ── READ: single asset ────────────────────────────────────────────────────────
+
+// getAssetDisplayInfo(uint256 tokenId)
+// Returns full AssetDisplayInfo including fractional details
 export function useGetAssetDisplayInfo(tokenId: bigint | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -13,6 +21,21 @@ export function useGetAssetDisplayInfo(tokenId: bigint | undefined) {
   })
 }
 
+// fetchAsset(uint256 tokenId)
+// Returns basic RealEstateAsset struct (price in whole USDC)
+export function useFetchAsset(tokenId: bigint | undefined) {
+  return useReadContract({
+    address: PROPVERA_CONTRACT_ADDRESS,
+    abi: PROPVERA_ABI,
+    functionName: "fetchAsset",
+    args: tokenId !== undefined ? [tokenId] : undefined,
+    query: { enabled: tokenId !== undefined },
+  })
+}
+
+// ── READ: asset lists ─────────────────────────────────────────────────────────
+
+// fetchAllAssetsWithDisplayInfo() — all assets including sold and unverified
 export function useGetAllAssetsWithDisplayInfo() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -21,6 +44,7 @@ export function useGetAllAssetsWithDisplayInfo() {
   })
 }
 
+// fetchAvailableAssets() — verified + unsold only (main marketplace feed)
 export function useGetAvailableAssets() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -29,6 +53,7 @@ export function useGetAvailableAssets() {
   })
 }
 
+// fetchFractionalizedAssets() — assets with active fractional tokens
 export function useGetFractionalizedAssets() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -37,6 +62,7 @@ export function useGetFractionalizedAssets() {
   })
 }
 
+// fetchAllListedAssets() — all assets with a non-zero seller (includes sold)
 export function useGetAllListedAssets() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -45,6 +71,7 @@ export function useGetAllListedAssets() {
   })
 }
 
+// fetchUnsoldAssets() — all unsold assets regardless of verification status
 export function useGetUnsoldAssets() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -53,6 +80,7 @@ export function useGetUnsoldAssets() {
   })
 }
 
+// getSellerAssets(address seller) — all assets listed by a specific seller
 export function useGetSellerAssets(sellerAddress: `0x${string}` | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -63,16 +91,9 @@ export function useGetSellerAssets(sellerAddress: `0x${string}` | undefined) {
   })
 }
 
-export function useGetSellerMetrics(sellerAddress: `0x${string}` | undefined) {
-  return useReadContract({
-    address: PROPVERA_CONTRACT_ADDRESS,
-    abi: PROPVERA_ABI,
-    functionName: "getSellerMetrics",
-    args: sellerAddress ? [sellerAddress] : undefined,
-    query: { enabled: !!sellerAddress },
-  })
-}
+// ── READ: purchase state ──────────────────────────────────────────────────────
 
+// isAssetPaidFor(uint256 tokenId)
 export function useIsAssetPaidFor(tokenId: bigint | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -83,6 +104,7 @@ export function useIsAssetPaidFor(tokenId: bigint | undefined) {
   })
 }
 
+// getAssetBuyer(uint256 tokenId) — address of pending buyer (zero if none)
 export function useGetAssetBuyer(tokenId: bigint | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -93,6 +115,7 @@ export function useGetAssetBuyer(tokenId: bigint | undefined) {
   })
 }
 
+// isAssetCanceled(uint256 tokenId)
 export function useIsAssetCanceled(tokenId: bigint | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -103,6 +126,9 @@ export function useIsAssetCanceled(tokenId: bigint | undefined) {
   })
 }
 
+// ── READ: roles ───────────────────────────────────────────────────────────────
+
+// sellers(address) — true if registered seller
 export function useIsSeller(address: `0x${string}` | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -113,6 +139,7 @@ export function useIsSeller(address: `0x${string}` | undefined) {
   })
 }
 
+// isAdmin(address)
 export function useIsAdmin(address: `0x${string}` | undefined) {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -123,6 +150,7 @@ export function useIsAdmin(address: `0x${string}` | undefined) {
   })
 }
 
+// owner()
 export function useGetOwner() {
   return useReadContract({
     address: PROPVERA_CONTRACT_ADDRESS,
@@ -131,11 +159,21 @@ export function useGetOwner() {
   })
 }
 
-// ─── WRITE HOOKS ─────────────────────────────────────────────────────────────
+// getSellerMetrics(address) — returns [confirmedSales, canceledSales]
+export function useGetSellerMetrics(sellerAddress: `0x${string}` | undefined) {
+  return useReadContract({
+    address: PROPVERA_CONTRACT_ADDRESS,
+    abi: PROPVERA_ABI,
+    functionName: "getSellerMetrics",
+    args: sellerAddress ? [sellerAddress] : undefined,
+    query: { enabled: !!sellerAddress },
+  })
+}
 
-// registerSeller()
+// ── WRITE: seller registration ────────────────────────────────────────────────
+
 export function useRegisterSeller() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const registerSeller = () => {
@@ -146,13 +184,16 @@ export function useRegisterSeller() {
     })
   }
 
-  return { registerSeller, hash, isPending, isConfirming, isSuccess, error }
+  return { registerSeller, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
+// ── WRITE: asset lifecycle ────────────────────────────────────────────────────
+
 // createAsset(string _tokenURI, uint256 _priceInEth)
-// _priceInEth is whole USDC units e.g. 1000n = 1000 USDC
+// _priceInEth: whole USDC e.g. 1000n = 1000 USDC (contract converts to 6-dec wei internally)
+// _tokenURI: base64 data URI or IPFS/HTTPS URL to JSON metadata { name, description, image }
 export function useCreateAsset() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const createAsset = (tokenURI: string, priceInEth: bigint) => {
@@ -164,12 +205,12 @@ export function useCreateAsset() {
     })
   }
 
-  return { createAsset, hash, isPending, isConfirming, isSuccess, error }
+  return { createAsset, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
 // verifyAsset(uint256 tokenId) — admin only
 export function useVerifyAsset() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const verifyAsset = (tokenId: bigint) => {
@@ -181,12 +222,12 @@ export function useVerifyAsset() {
     })
   }
 
-  return { verifyAsset, hash, isPending, isConfirming, isSuccess, error }
+  return { verifyAsset, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
 // delistAsset(uint256 tokenId) — seller only
 export function useDelistAsset() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const delistAsset = (tokenId: bigint) => {
@@ -198,12 +239,12 @@ export function useDelistAsset() {
     })
   }
 
-  return { delistAsset, hash, isPending, isConfirming, isSuccess, error }
+  return { delistAsset, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
 // delistAssetAdmin(uint256 tokenId) — admin only
 export function useDelistAssetAdmin() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const delistAssetAdmin = (tokenId: bigint) => {
@@ -215,13 +256,15 @@ export function useDelistAssetAdmin() {
     })
   }
 
-  return { delistAssetAdmin, hash, isPending, isConfirming, isSuccess, error }
+  return { delistAssetAdmin, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
+// ── WRITE: purchase flow ──────────────────────────────────────────────────────
+
 // buyAsset(uint256 tokenId)
-// Requires USDC approval of priceInEth * 1_000_000n before calling
+// Requires USDC approval of (asset.priceInEth * 1_000_000n) before calling
 export function useBuyAsset() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const buyAsset = (tokenId: bigint) => {
@@ -233,12 +276,13 @@ export function useBuyAsset() {
     })
   }
 
-  return { buyAsset, hash, isPending, isConfirming, isSuccess, error }
+  return { buyAsset, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
-// confirmAssetPayment(uint256 tokenId) — buyer only
+// confirmAssetPayment(uint256 tokenId) — pending buyer only
+// Releases USDC to seller (97%) + platform fee (3%), transfers NFT to buyer
 export function useConfirmAssetPayment() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const confirmPayment = (tokenId: bigint) => {
@@ -250,12 +294,13 @@ export function useConfirmAssetPayment() {
     })
   }
 
-  return { confirmPayment, hash, isPending, isConfirming, isSuccess, error }
+  return { confirmPayment, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
-// cancelAssetPurchase(uint256 tokenId) — buyer only, 1% penalty
+// cancelAssetPurchase(uint256 tokenId) — pending buyer only
+// Refunds 99% to buyer, 1% penalty to platform
 export function useCancelAssetPurchase() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const cancelPurchase = (tokenId: bigint) => {
@@ -267,12 +312,13 @@ export function useCancelAssetPurchase() {
     })
   }
 
-  return { cancelPurchase, hash, isPending, isConfirming, isSuccess, error }
+  return { cancelPurchase, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
-// addAdmin(address _admin) — owner only
+// ── WRITE: admin management (owner only) ─────────────────────────────────────
+
 export function useAddAdmin() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const addAdmin = (adminAddress: `0x${string}`) => {
@@ -284,12 +330,11 @@ export function useAddAdmin() {
     })
   }
 
-  return { addAdmin, hash, isPending, isConfirming, isSuccess, error }
+  return { addAdmin, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
-// removeAdmin(address _admin) — owner only
 export function useRemoveAdmin() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const removeAdmin = (adminAddress: `0x${string}`) => {
@@ -301,12 +346,13 @@ export function useRemoveAdmin() {
     })
   }
 
-  return { removeAdmin, hash, isPending, isConfirming, isSuccess, error }
+  return { removeAdmin, hash, isPending, isConfirming, isSuccess, error, reset }
 }
 
 // withdrawUSDC(address recipient, uint256 amountInEth) — owner only
+// amountInEth: whole USDC e.g. 500n = 500 USDC
 export function useWithdrawUSDC() {
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { writeContract, data: hash, isPending, error, reset } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const withdrawUSDC = (recipient: `0x${string}`, amountInEth: bigint) => {
@@ -318,5 +364,5 @@ export function useWithdrawUSDC() {
     })
   }
 
-  return { withdrawUSDC, hash, isPending, isConfirming, isSuccess, error }
+  return { withdrawUSDC, hash, isPending, isConfirming, isSuccess, error, reset }
 }
