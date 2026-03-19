@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButtonClient } from "./connect-button-client";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -43,7 +43,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <ConnectButton />
+          <ConnectButtonClient />
         </div>
       </nav>
     </header>

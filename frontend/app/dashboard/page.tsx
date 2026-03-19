@@ -2,7 +2,7 @@
 
 import { useAccount } from "wagmi";
 import { redirect } from "next/navigation";
-import { Navbar } from "@/components/navbar";
+import { NavbarClient } from "@/components/navbar-client";
 import { StatCard } from "@/components/stat-card";
 import { TransactionItem } from "@/components/transaction-item";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Navbar />
+      <NavbarClient />
       <main className="min-h-screen bg-muted/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Header */}

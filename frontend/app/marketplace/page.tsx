@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/navbar";
+import { NavbarClient } from "@/components/navbar-client";
 import { AssetCard } from "@/components/asset-card";
 import { Spinner } from "@/components/ui/spinner";
 import { Asset } from "@/lib/types";
@@ -82,7 +82,7 @@ export default function MarketplacePage() {
 
   return (
     <>
-      <Navbar />
+      <NavbarClient />
       <main className="min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">

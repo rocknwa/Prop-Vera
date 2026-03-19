@@ -1,24 +1,27 @@
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { createConfig, http } from "wagmi";
+'use client';
 
-// Polkadot Hub Testnet Configuration
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { http } from "wagmi";
+
+// Polkadot Hub Testnet Configuration (Chain ID: 420420417)
 const polkadotHubTestnet = {
-  id: 5135,
+  id: 420420417,
   name: "Polkadot Hub Testnet",
   network: "polkadot-hub-testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "Testnet Token",
-    symbol: "TEST",
+    name: "Polkadot",
+    symbol: "DOT",
   },
   rpcUrls: {
-    public: { http: ["https://testnet-rpc.polkadot.io"] },
-    default: { http: ["https://testnet-rpc.polkadot.io"] },
+    public: { http: ["https://services.polkadothub-rpc.com/testnet"] },
+    default: { http: ["https://services.polkadothub-rpc.com/testnet"] },
   },
   blockExplorers: {
     default: {
-      name: "Polkadot Explorer",
-      url: "https://testnet.polkadot.io",
+      name: "Polkadot Hub Testnet Explorer",
+      url: "https://blockscout-testnet.polkadot.io",
+      apiUrl: "https://blockscout-testnet.polkadot.io/api",
     },
   },
   testnet: true,
@@ -26,12 +29,11 @@ const polkadotHubTestnet = {
 
 export const config = getDefaultConfig({
   appName: "PropVera",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "default",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   chains: [polkadotHubTestnet as any],
   transports: {
     [polkadotHubTestnet.id]: http(),
   },
-  ssr: true,
 });
 
 declare module "wagmi" {
