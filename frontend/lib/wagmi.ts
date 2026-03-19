@@ -1,5 +1,5 @@
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { createConfig, http } from "wagmi";
+import { http } from "wagmi";
 
 // Polkadot Hub Testnet Configuration (Chain ID: 420420417)
 const polkadotHubTestnet = {
@@ -9,16 +9,17 @@ const polkadotHubTestnet = {
   nativeCurrency: {
     decimals: 18,
     name: "Polkadot",
-    symbol: "POL",
+    symbol: "DOT",
   },
   rpcUrls: {
-    public: { http: ["https://rpc.testnet.immutable.com"] },
-    default: { http: ["https://rpc.testnet.immutable.com"] },
+    public: { http: ["https://services.polkadothub-rpc.com/testnet"] },
+    default: { http: ["https://services.polkadothub-rpc.com/testnet"] },
   },
   blockExplorers: {
     default: {
-      name: "Polkadot Hub Explorer",
-      url: "https://explorer.testnet.immutable.com",
+      name: "Polkadot Hub Testnet Explorer",
+      url: "https://blockscout-testnet.polkadot.io",
+      apiUrl: "https://blockscout-testnet.polkadot.io/api",
     },
   },
   testnet: true,
@@ -26,7 +27,7 @@ const polkadotHubTestnet = {
 
 export const config = getDefaultConfig({
   appName: "PropVera",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "default",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "test-project",
   chains: [polkadotHubTestnet as any],
   transports: {
     [polkadotHubTestnet.id]: http(),
