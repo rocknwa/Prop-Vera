@@ -23,9 +23,7 @@
     "autoprefixer": "^10.4.17",
     "typescript": "^5.3.3",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.338.0",
-    "class-variance-authority": "^0.7.0",
-    "tailwind-merge": "^2.2.0"
+    "lucide-react": "^0.338.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
