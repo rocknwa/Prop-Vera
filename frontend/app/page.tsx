@@ -1,11 +1,11 @@
-import { Navbar } from "@/components/navbar";
+import { NavbarClient } from "@/components/navbar-client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <NavbarClient />
       <main className="min-h-screen flex flex-col">
         {/* Hero Section */}
         <section className="flex-1 flex items-center justify-center px-4 py-20 sm:px-6 lg:px-8">
