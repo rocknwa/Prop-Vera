@@ -175,7 +175,7 @@ Seller → registerSeller() → uploadImage(Pinata IPFS) → createAsset(tokenUR
 ### **Smart Contracts** (`smart-contract/`)
 - **Language**: Solidity ^0.8.28
 - **Framework**: Hardhat v2.26.3
-- **Libraries**: OpenZeppelin v4.9.6 (ERC721URIStorage, ERC20, ReentrancyGuard, SafeERC20, Ownable)
+- **Libraries**: OpenZeppelin v5.6.1 (ERC721URIStorage, ERC20, ReentrancyGuard, SafeERC20, Ownable)
 - **Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
 - **Payment Token**: MockUSDC (6 decimals, minter-whitelisted)
 - **Testing**: **158 tests passing, 100% branch coverage**
