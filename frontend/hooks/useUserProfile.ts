@@ -1,4 +1,4 @@
-import { useReadContract, useReadContracts } from "wagmi"
+import { useReadContract } from "wagmi"
 import { useAccount } from "wagmi"
 import {
   PROPVERA_CONTRACT_ADDRESS,
