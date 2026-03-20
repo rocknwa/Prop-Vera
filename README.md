@@ -5,6 +5,7 @@
 [![License: UNLICENSED](https://img.shields.io/badge/License-UNLICENSED-red.svg)](LICENSE)
 [![Solidity](https://img.shields.io/badge/Solidity-^0.8.28-blue.svg)](https://soliditylang.org/)
 [![Polkadot](https://img.shields.io/badge/Network-Polkadot_Hub_EVM-e6007a.svg)](https://polkadot.network/)
+[![Tests](https://img.shields.io/badge/Tests-158_Passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/Test_Coverage-100%25_Branch-brightgreen.svg)](#testing)
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js_16-black.svg)](https://nextjs.org/)
 
@@ -15,8 +16,7 @@ PropVera is a decentralized application (DApp) that removes traditional barriers
 ## 🔗 Quick Links
 
 - **Live Demo**: https://prop-vera.vercel.app/
-- **Video Demo**:  
-- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true
+- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true 
 
 ---
 
@@ -29,8 +29,9 @@ PropVera is a decentralized application (DApp) that removes traditional barriers
 | `PropVera` | `0xdF6A1Da673B623D9e1c6c538f4653d4429284429` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xdF6A1Da673B623D9e1c6c538f4653d4429284429#code) |
 | `PropVeraFractionalToken` | `0x1807F7c4984f5188e948C2e828fadE1b2F0011eb` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0x1807F7c4984f5188e948C2e828fadE1b2F0011eb#code) |
 | `MockUSDC` | `0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06#code) |
+| `USDCFaucet` | `0xA53860Ff96067c0632fB498bf777807D8B55Da8a` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xA53860Ff96067c0632fB498bf777807D8B55Da8a#code) |
 
-All contracts are **verified** on Blockscout with source code publicly readable.
+All 4 contracts are **deployed and verified** on Blockscout with source code publicly readable.
 
 ---
 
@@ -57,7 +58,7 @@ PropVera leverages blockchain technology to make real estate investment:
 - Fractional ownership starting with **any amount** (even as low as $5)
 - Invest in multiple properties to diversify your portfolio
 - No geographic restrictions — invest globally from your device
-- Buy properties remotely and claim documents anytime with on-chain proof
+- Buy properties remotely with on-chain proof of ownership
 
 ### **Transparent**
 - Every transaction recorded immutably on Polkadot Hub blockchain
@@ -85,10 +86,11 @@ PropVera leverages blockchain technology to make real estate investment:
 - Micro-transaction economics enable profitable small investments
 
 ### **User-Friendly**
-- **Mint test USDC** directly from the UI — no external faucet needed
-- Role-based navigation — admin dashboard auto-detects on-chain role
+- **Built-in USDC faucet** — click "🪙 Get USDC" in the navbar to receive 10,000 test USDC instantly, no external tools needed
+- **IPFS image uploads** via Pinata — sellers upload property images directly from the UI
+- **Hamburger menu** with full mobile navigation drawer — USDC balance, role badge, and all pages accessible on mobile
+- Role-based navigation — Admin dashboard auto-detects on-chain role
 - Two-step approve → transact flow with clear step indicators
-- Full mobile-responsive design
 
 ---
 
@@ -121,19 +123,20 @@ PropVera leverages blockchain technology to make real estate investment:
 ### For Investors
 
 1. **Connect Wallet**: Use MetaMask, WalletConnect, or any EVM wallet
-2. **Get Test USDC**: Click "🪙 Get USDC" in the navbar to mint 10,000 test USDC instantly
-3. **Browse Verified Properties**: View real estate listings on the marketplace
-4. **Choose Your Investment**: Buy entire properties or fractional shares
+2. **Get Test USDC**: Click "🪙 Get USDC" in the navbar — the `USDCFaucet` contract mints 10,000 USDC directly to your wallet
+3. **Browse Verified Properties**: View listings on the marketplace or fractional page
+4. **Choose Your Investment**: Buy entire properties or fractional PVF shares
 5. **Instant Ownership**: Receive NFTs (whole property) or PVF tokens (fractional shares)
-6. **Earn Dividends**: Receive automated distributions proportional to your ownership
+6. **Earn Dividends**: Receive automated USDC distributions proportional to your ownership
 7. **Trade Anytime**: List your shares on the secondary marketplace or transfer peer-to-peer
 
 ### For Sellers
 
 1. **Register**: Call `registerSeller()` once from the Seller dashboard
-2. **Create Asset NFT**: Fill the property form — metadata encoded as base64 JSON on-chain
-3. **Await Verification**: Admin reviews and verifies your listing
-4. **Receive Payment**: Get paid in USDC automatically when buyers confirm (97% to seller, 3% platform fee)
+2. **Upload Image**: Select a property image — it's uploaded to IPFS via Pinata and pinned permanently
+3. **Create Asset NFT**: Fill the property form — metadata (name, description, IPFS image URL, location, type, size) encoded as base64 JSON on-chain
+4. **Await Verification**: Admin reviews and verifies your listing
+5. **Receive Payment**: Get paid in USDC automatically when buyers confirm (97% to seller, 3% platform fee)
 
 ### For Admins
 
@@ -146,7 +149,9 @@ PropVera leverages blockchain technology to make real estate investment:
 ### Property Flow
 
 ```
-Seller → registerSeller() → createAsset(tokenURI, price) → [Pending Verification]
+Seller → registerSeller() → uploadImage(Pinata IPFS) → createAsset(tokenURI, price)
+                                                                      ↓
+                                                              [Pending Verification]
                                                                       ↓
                                                           Admin → verifyAsset()
                                                                       ↓
@@ -173,7 +178,7 @@ Seller → registerSeller() → createAsset(tokenURI, price) → [Pending Verifi
 - **Libraries**: OpenZeppelin v4.9.6 (ERC721URIStorage, ERC20, ReentrancyGuard, SafeERC20, Ownable)
 - **Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
 - **Payment Token**: MockUSDC (6 decimals, minter-whitelisted)
-- **Testing**: 123 tests, 100% branch coverage
+- **Testing**: **158 tests passing, 100% branch coverage**
 
 **Modular Architecture**:
 ```
@@ -187,6 +192,8 @@ smart-contract/contracts/
 ├── tokens/
 │   ├── PropVeraFractionalToken.sol ← ERC-20 PVF token (18 dec)
 │   └── MockUSDC.sol                ← Test USDC with minter whitelist (6 dec)
+├── mocks/
+│   └── USDCFaucet.sol              ← Public faucet, rate-limited, owner-bypass
 ├── types/PropVeraTypes.sol         ← Structs: RealEstateAsset, FractionalAsset…
 ├── errors/PropVeraErrors.sol       ← 25+ custom errors
 ├── events/PropVeraEvents.sol       ← All events
@@ -200,6 +207,7 @@ smart-contract/contracts/
 - **Styling**: Tailwind CSS
 - **Web3**: wagmi v2 + RainbowKit v2 + viem v2
 - **State**: TanStack Query v5
+- **Image Storage**: Pinata IPFS (property images pinned on-chain via base64 metadata)
 
 **Pages**:
 | Route | Description |
@@ -208,9 +216,9 @@ smart-contract/contracts/
 | `/marketplace` | Browse verified available properties |
 | `/fractional` | Browse fractionalized assets |
 | `/share-market` | Secondary peer-to-peer share listings |
-| `/asset/[id]` | Asset detail, buy whole or fractional |
-| `/dashboard` | Buyer portfolio, pending purchases, listings |
-| `/seller` | Register as seller, create assets, manage listings |
+| `/asset/[id]` | Asset detail — buy whole or fractional, secondary listings |
+| `/dashboard` | Buyer portfolio, pending purchases, share management |
+| `/seller` | Register, upload image to IPFS, create assets, manage listings |
 | `/admin` | On-chain gated: verify, fractionalize, dividends, treasury |
 
 ---
@@ -218,7 +226,7 @@ smart-contract/contracts/
 ## ✨ Core Features
 
 ### 🏠 Asset Management
-- Individual seller property listings with base64 on-chain metadata
+- Individual seller property listings with IPFS-hosted images and base64 on-chain metadata
 - Multi-admin verification before assets go live
 - Asset delisting with automatic buyer refunds
 - Real-time status tracking: created → verified → sold
@@ -226,15 +234,35 @@ smart-contract/contracts/
 ### 💰 Investment Options
 - **Whole property purchases**: Buy entire properties as ERC-721 NFTs
 - **Two-step flow**: Pay → Confirm to receive NFT (or cancel for 99% refund)
-- **Fractional ownership**: Invest in PVF token shares
+- **Fractional ownership**: Invest in PVF token shares with any amount
 - **Secondary market**: Buy/sell shares from other investors (2% platform fee)
 - **Share transfers**: Send fractional shares peer-to-peer at zero fee
+
+### 🪙 USDC Faucet
+- `USDCFaucet` contract is whitelisted as a minter on MockUSDC
+- Anyone can call `drip()` to receive 10,000 test USDC
+- Rate-limited with configurable cooldown (set to 0 on testnet — unlimited drips)
+- Owner bypass via `ownerDrip()` for manual distributions
+- Drip amount and cooldown adjustable by owner at any time
+
+### 📷 IPFS Image Uploads
+- Sellers upload property images directly from the create-asset form
+- Images pinned to IPFS via Pinata API — permanently stored and content-addressed
+- IPFS URL embedded in NFT metadata — immutable and decentralized
+- File validation: image type check, 10MB size limit, local preview before upload
+
+### 📱 Mobile Navigation
+- Hamburger menu opens a right-side slide-in drawer on mobile
+- Drawer shows: wallet address, live USDC balance, owner/admin role badge
+- Full "🪙 Get USDC" mint button inside drawer
+- All navigation links with icons — closes automatically on route change
+- Body scroll locked while drawer is open
 
 ### 📊 Financial Features
 - USDC stablecoin transactions — no crypto volatility
 - Automated dividend distribution to all fractional owners
 - **Transparent fees**: 3% listing · 2% trading · 1% cancellation penalty
-- **MockUSDC faucet**: Mint 10,000 test USDC per click from the UI
+- Portfolio dashboard with total invested, PVF balance, ownership percentages
 
 ### 🔐 Security & Verification
 - Multi-admin system with separate Owner and Admin roles
@@ -289,24 +317,40 @@ cd Prop-Vera
 cd smart-contract
 npm install
 npx hardhat compile
-npx hardhat test
+npx hardhat test          # 158 tests
+npx hardhat coverage      # 100% branch coverage
 npx hardhat run scripts/deploy.js --network polkadotTestnet
+npx hardhat run scripts/deployFaucet.js --network polkadotTestnet
 ```
 
 **Frontend:**
 ```bash
 cd frontend
 pnpm install
-
-# Create .env.local from example
 cp .env.example .env.local
-# Set NEXT_PUBLIC_PROPVERA_ADDRESS, NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS,
-# NEXT_PUBLIC_USDC_ADDRESS, NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-
+# Fill in your values — see .env.example for all required variables
 pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
+
+### Environment Variables
+
+```env
+# Required
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+
+# Contract addresses (Polkadot Hub Testnet)
+NEXT_PUBLIC_PROPVERA_ADDRESS=0xdF6A1Da673B623D9e1c6c538f4653d4429284429
+NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS=0x1807F7c4984f5188e948C2e828fadE1b2F0011eb
+NEXT_PUBLIC_USDC_ADDRESS=0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06
+NEXT_PUBLIC_FAUCET_ADDRESS=0xA53860Ff96067c0632fB498bf777807D8B55Da8a
+
+# Pinata IPFS (for property image uploads)
+# Get JWT from: https://app.pinata.cloud/developers/api-keys
+NEXT_PUBLIC_PINATA_JWT=your_pinata_jwt_here
+NEXT_PUBLIC_PINATA_GATEWAY=https://gateway.pinata.cloud
+```
 
 ---
 
@@ -320,27 +364,65 @@ REPORT_GAS=true npx hardhat test
 npx hardhat coverage
 ```
 
-**Results**:
-```
-All files  |  100%  |  100%  |  100%  |  100%
-```
+**Results — 158 tests, 100% branch coverage:**
 
-123 tests across 26 describe blocks — every function, branch, and custom error path covered.
+```
+PropVera and PropVeraFractionalToken  (109 tests)
+  ├── PropVeraFractionalToken Deployment
+  ├── PropVera Deployment
+  ├── Seller Registration
+  ├── Asset Creation
+  ├── Asset Verification
+  ├── Fractionalization
+  ├── Fractional Purchases
+  ├── Dividend Distribution
+  ├── Asset Purchase
+  ├── Delisting
+  ├── Withdrawals
+  ├── MockUSDC
+  ├── Asset Purchase Cancellation
+  ├── Admin Management
+  ├── Asset Listing
+  ├── Share Transfer and Trading
+  ├── Buyer Portfolio
+  ├── Display Info Functions
+  ├── Fractional Asset Cancellation
+  ├── MockUSDC – full branch coverage
+  ├── PropVeraFractionalToken – full branch coverage
+  ├── AssetMarketplace – uncovered branches
+  ├── Fractionalization – uncovered branches
+  ├── ShareTrading – uncovered branches
+  └── PropVera core – display function branches
+
+USDCFaucet  (49 tests)
+  ├── Deployment
+  ├── drip()
+  ├── dripTo()
+  ├── cooldownRemaining()
+  ├── canDrip()
+  ├── setDripAmount()
+  ├── setCooldown()
+  ├── ownerDrip()
+  ├── MockUSDC minter integration
+  └── Edge cases
+```
 
 ---
 
 ## 📈 Roadmap
 
 ### ✅ Phase 0 — Core Protocol (Complete)
-- ✅ Modular smart contract architecture
-- ✅ 100% branch test coverage
-- ✅ Full Next.js frontend with on-chain integration
+- ✅ Modular smart contract architecture (4 contracts deployed and verified)
+- ✅ 158 tests passing, 100% branch coverage
+- ✅ Full Next.js frontend with 8 on-chain integrated pages
 - ✅ Admin dashboard with real on-chain role detection
-- ✅ Seller registration and asset creation with NFT metadata
+- ✅ Seller registration and asset creation with IPFS image uploads via Pinata
 - ✅ Buyer dashboard — portfolio, pending purchases, share management
 - ✅ Secondary share marketplace
-- ✅ Deployed and verified on Polkadot Hub EVM Testnet
+- ✅ USDCFaucet — anyone can mint test USDC with one click
+- ✅ Mobile-responsive with hamburger drawer navigation
 - ✅ Anti-rug and AML mechanisms
+- ✅ Deployed and verified on Polkadot Hub EVM Testnet
 
 ### 🔄 Phase 1 — MVP & Real Estate Partnerships
 **Target TVL: $2M – $10M**
@@ -408,19 +490,21 @@ All files  |  100%  |  100%  |  100%  |  100%
 | `buyListedShares()` | ~200,000 |
 | `transferShares()` | ~150,000 |
 | `distributeFractionalDividends()` | ~50,000 + (N holders × ~30,000) |
+| `drip()` (USDCFaucet) | ~60,000 |
 
 ---
 
 ## 🔒 Security
 
 - **OpenZeppelin Contracts**: Industry-standard, audited implementations
-- **100% Branch Coverage**: Every code path tested across all modules
+- **158 Tests, 100% Branch Coverage**: Every code path tested across all contracts
 - **ReentrancyGuard**: Applied to every function that moves funds or tokens
 - **CEI Pattern**: Check-Effects-Interactions strictly followed throughout
 - **25+ Custom Errors**: Gas-efficient descriptive error handling
 - **SafeERC20**: All token transfers wrapped
 - **Immutable Token Addresses**: Set at construction, cannot be changed post-deploy
 - **One-Time Lock**: `setPropVera` permanently locks the fractional token after first call
+- **Faucet Minter Isolation**: Only `USDCFaucet` is whitelisted as minter — not individual users
 
 ⚠️ **Smart Contract Audit Pending**. This is experimental software — do not invest significant funds until professional audits are complete.
 
@@ -444,8 +528,8 @@ Please open issues for bugs or feature requests.
 
 ## 👥 Team
 
-**Founder & CEO / Blockchain Architect**: Therock Ani
-📧 anitherock44@gmail.com · [@ani_therock](https://twitter.com/ani_therock) · [therock-ani.vercel.app](https://therock-ani.vercel.app) 
+**Founder & Solo Developer / Blockchain Architect**: Therock Ani
+📧 anitherock44@gmail.com · [@ani_therock](https://twitter.com/ani_therock) · [therock-ani.vercel.app](https://therock-ani.vercel.app)
 
 ---
 
@@ -456,13 +540,14 @@ Please open issues for bugs or feature requests.
 - **Hardhat** for excellent Solidity development tooling
 - **RainbowKit & Wagmi** for seamless Web3 frontend integration
 - **Blockscout** for open-source block explorer and contract verification
+- **Pinata** for IPFS pinning infrastructure
 - **viem** for type-safe Ethereum interactions
 
 ---
 
 ## 📞 Contact & Links
 
-- **Live Demo**: https://propvera.vercel.app/
+- **Live Demo**: https://prop-vera.vercel.app/
 - **GitHub**: https://github.com/rocknwa/Prop-Vera
 - **Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
 - **RPC**: https://services.polkadothub-rpc.com/testnet
