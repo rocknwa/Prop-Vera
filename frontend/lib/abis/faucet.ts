@@ -1,0 +1,93 @@
+// ABI for USDCFaucet contract
+export const USDC_FAUCET_ABI = [
+  {
+    name: "drip",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+  {
+    name: "dripTo",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "recipient", type: "address" }],
+    outputs: [],
+  },
+  {
+    name: "canDrip",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "cooldownRemaining",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "dripAmount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "cooldown",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "lastDrip",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "usdc",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    name: "setDripAmount",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "newAmount", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "setCooldown",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "newCooldown", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "ownerDrip",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "recipient", type: "address" },
+      { name: "amount",    type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "Dripped",
+    type: "event",
+    inputs: [
+      { name: "recipient",   type: "address", indexed: true  },
+      { name: "amountInEth", type: "uint256", indexed: false },
+    ],
+  },
+  { name: "ZeroAddress",                   type: "error", inputs: [] },
+  { name: "CooldownNotElapsed",            type: "error", inputs: [{ name: "secondsRemaining", type: "uint256" }] },
+] as const;
