@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ConnectButtonClient } from "./connect-button-client";
 import { cn } from "@/lib/utils";
-import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI, MOCK_USDC_ADDRESS, MOCK_USDC_ABI } from "@/lib/contracts";
+import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI, MOCK_USDC_ADDRESS, MOCK_USDC_ABI, USDC_FAUCET_ADDRESS, USDC_FAUCET_ABI } from "@/lib/contracts";
 import { useEffect, useState } from "react";
 
 // ── Icons (inline SVG — no extra deps) ──────────────────────────────────────
@@ -82,7 +82,7 @@ export function Navbar() {
 
   const handleMintUSDC = () => {
     if (!address) return;
-    writeContract({ address: MOCK_USDC_ADDRESS, abi: MOCK_USDC_ABI, functionName: "mint", args: [address, 10000n] });
+    writeContract({ address: USDC_FAUCET_ADDRESS, abi: USDC_FAUCET_ABI, functionName: "drip" });
   };
 
   const isOwner = mounted && address && contractOwner
