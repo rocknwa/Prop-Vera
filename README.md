@@ -16,7 +16,7 @@ PropVera is a decentralized application (DApp) that removes traditional barriers
 
 - **Live Demo**: https://prop-vera.vercel.app/
 - **Video Demo**:  
-- **Pitch Deck**:  
+- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true
 
 ---
 
