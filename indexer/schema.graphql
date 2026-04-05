@@ -1,0 +1,84 @@
+type Asset @entity {
+  id: ID!                          # tokenId as string
+  tokenId: BigInt!
+  seller: Seller
+  priceInEth: BigInt!
+  verified: Boolean!
+  sold: Boolean!
+  isFractionalized: Boolean!
+  isPaidFor: Boolean!
+  currentBuyer: Bytes
+  tokenURI: String!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  fractionalData: FractionalAsset  # linked if fractionalized
+  positions: [FractionalPosition!]! @derivedFrom(field: "asset")
+  shareListings: [ShareListing!]!  @derivedFrom(field: "asset")
+}
+
+type FractionalAsset @entity {
+  id: ID!                          # same as Asset id
+  asset: Asset!
+  totalTokens: BigInt!
+  pricePerToken: BigInt!
+  remainingTokens: BigInt!
+  accumulatedPayments: BigInt!
+  buyers: [FractionalPosition!]!   @derivedFrom(field: "fractionalAsset")
+}
+
+type FractionalPosition @entity {
+  id: ID!                          # tokenId-holderAddress
+  asset: Asset!
+  fractionalAsset: FractionalAsset!
+  holder: Bytes!
+  tokensOwned: BigInt!
+  investedAmount: BigInt!
+  updatedAt: BigInt!
+}
+
+type ShareListing @entity {
+  id: ID!                          # listingId as string
+  listingId: BigInt!
+  asset: Asset!
+  seller: Bytes!
+  numShares: BigInt!
+  pricePerShare: BigInt!
+  active: Boolean!
+  createdAt: BigInt!
+}
+
+type Seller @entity {
+  id: ID!                          # seller address
+  address: Bytes!
+  registeredAt: BigInt!
+  assets: [Asset!]!                @derivedFrom(field: "seller")
+  confirmedSales: BigInt!
+  canceledSales: BigInt!
+}
+
+type DividendDistribution @entity {
+  id: ID!                          # txHash-logIndex
+  asset: Asset!
+  totalAmount: BigInt!
+  timestamp: BigInt!
+  recipients: [Bytes!]!
+  amounts: [BigInt!]!
+}
+
+type FaucetDrip @entity {
+  id: ID!                          # txHash-logIndex
+  recipient: Bytes!
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+type ProtocolStats @entity {
+  id: ID!                          # singleton: "stats"
+  totalAssets: BigInt!
+  totalVerifiedAssets: BigInt!
+  totalSoldAssets: BigInt!
+  totalFractionalizedAssets: BigInt!
+  totalSellers: BigInt!
+  totalVolumeUSDC: BigInt!
+  updatedAt: BigInt!
+}

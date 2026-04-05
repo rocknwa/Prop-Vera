@@ -1,0 +1,79 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PropVera
+    network: polkadot-hub-testnet
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: PropVera
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Asset
+        - FractionalAsset
+        - FractionalPosition
+        - ShareListing
+        - Seller
+        - DividendDistribution
+        - ProtocolStats
+      abis:
+        - name: PropVera
+          file: PropVera/abis/PropVera.json
+      eventHandlers:
+        - event: AssetCreated(indexed uint256,uint256,indexed address,bool)
+          handler: handleAssetCreated
+        - event: AssetVerified(indexed uint256,indexed address)
+          handler: handleAssetVerified
+        - event: AssetDelisted(indexed uint256,indexed address)
+          handler: handleAssetDelisted
+        - event: AssetPurchased(indexed uint256,indexed address,uint256)
+          handler: handleAssetPurchased
+        - event: AssetPaymentConfirmed(indexed uint256,indexed address)
+          handler: handleAssetPaymentConfirmed
+        - event: AssetCanceled(indexed uint256,indexed address)
+          handler: handleAssetCanceled
+        - event: FractionalAssetCreated(indexed uint256,uint256,uint256,indexed address)
+          handler: handleFractionalAssetCreated
+        - event: FractionalAssetPurchased(indexed uint256,indexed address,uint256,uint256)
+          handler: handleFractionalAssetPurchased
+        - event: FractionalDividendsDistributed(indexed uint256,uint256,address[],uint256[])
+          handler: handleDividendsDistributed
+        - event: SellerRegistered(indexed address)
+          handler: handleSellerRegistered
+        - event: USDCWithdrawn(indexed address,uint256)
+          handler: handleUSDCWithdrawn
+        - event: SharesTransferred(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleSharesTransferred
+        - event: SharesListed(indexed uint256,indexed uint256,indexed address,uint256,uint256)
+          handler: handleSharesListed
+        - event: SharesPurchased(indexed uint256,indexed uint256,indexed
+            address,address,uint256,uint256)
+          handler: handleSharesPurchased
+        - event: ShareListingCanceled(indexed uint256,indexed uint256,indexed address)
+          handler: handleShareListingCanceled
+      file: PropVera/PropVera.wasm
+  - kind: ethereum
+    name: USDCFaucet
+    network: polkadot-hub-testnet
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: USDCFaucet
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FaucetDrip
+      abis:
+        - name: USDCFaucet
+          file: USDCFaucet/abis/USDCFaucet.json
+      eventHandlers:
+        - event: Dripped(indexed address,uint256)
+          handler: handleDripped
+      file: USDCFaucet/USDCFaucet.wasm

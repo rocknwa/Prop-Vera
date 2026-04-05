@@ -1,0 +1,78 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PropVera
+    network: polkadot-hub-testnet  # Note: Update if Goldsky uses different network name
+    source:
+      address: "0xdF6A1Da673B623D9e1c6c538f4653d4429284429"  # TODO: Update with actual PropVera contract address
+      abi: PropVera
+      startBlock: 6554818  # TODO: Update with actual deployment block from Blockscout
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Asset
+        - FractionalAsset
+        - FractionalPosition
+        - ShareListing
+        - Seller
+        - DividendDistribution
+        - ProtocolStats
+      abis:
+        - name: PropVera
+          file: ./abis/PropVera.json
+      eventHandlers:
+        - event: AssetCreated(indexed uint256,uint256,indexed address,bool)
+          handler: handleAssetCreated
+        - event: AssetVerified(indexed uint256,indexed address)
+          handler: handleAssetVerified
+        - event: AssetDelisted(indexed uint256,indexed address)
+          handler: handleAssetDelisted
+        - event: AssetPurchased(indexed uint256,indexed address,uint256)
+          handler: handleAssetPurchased
+        - event: AssetPaymentConfirmed(indexed uint256,indexed address)
+          handler: handleAssetPaymentConfirmed
+        - event: AssetCanceled(indexed uint256,indexed address)
+          handler: handleAssetCanceled
+        - event: FractionalAssetCreated(indexed uint256,uint256,uint256,indexed address)
+          handler: handleFractionalAssetCreated
+        - event: FractionalAssetPurchased(indexed uint256,indexed address,uint256,uint256)
+          handler: handleFractionalAssetPurchased
+        - event: FractionalDividendsDistributed(indexed uint256,uint256,address[],uint256[])
+          handler: handleDividendsDistributed
+        - event: SellerRegistered(indexed address)
+          handler: handleSellerRegistered
+        - event: USDCWithdrawn(indexed address,uint256)
+          handler: handleUSDCWithdrawn
+        - event: SharesTransferred(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleSharesTransferred
+        - event: SharesListed(indexed uint256,indexed uint256,indexed address,uint256,uint256)
+          handler: handleSharesListed
+        - event: SharesPurchased(indexed uint256,indexed uint256,indexed address,address,uint256,uint256)
+          handler: handleSharesPurchased
+        - event: ShareListingCanceled(indexed uint256,indexed uint256,indexed address)
+          handler: handleShareListingCanceled
+      file: ./src/propvera.ts
+  - kind: ethereum
+    name: USDCFaucet
+    network: polkadot-hub-testnet
+    source:
+      address: "0xA53860Ff96067c0632fB498bf777807D8B55Da8a"  # TODO: Update with actual USDCFaucet contract address
+      abi: USDCFaucet
+      startBlock: 6626213  # TODO: Update with actual deployment block
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FaucetDrip
+      abis:
+        - name: USDCFaucet
+          file: ./abis/USDCFaucet.json
+      eventHandlers:
+        - event: Dripped(indexed address,uint256)
+          handler: handleDripped
+      file: ./src/faucet.ts
