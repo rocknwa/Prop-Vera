@@ -1,7 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('dotenv').config();
 
-const { PRIVATE_KEY } = process.env;
+const cronosApiKeyMainnet = process.env.MAINNET_API_KEY;
+const cronosApiKeyTestnet = process.env.TESTNET_API_KEY;
 
 module.exports = {
   solidity: {
@@ -15,31 +16,43 @@ module.exports = {
     },
   },
   networks: {
-    polkadotTestnet: {
-      url: "https://services.polkadothub-rpc.com/testnet",
-      chainId: 420420417,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
-      // Polkadot Hub EVM does not support "pending" block tag —
-      // force Ignition to use "latest" for nonce lookups
-      ignition: {
-        blockPollingInterval: 1_000,
-        timeBeforeBumpingFees: 3 * 60 * 1_000,
-        maxFeeBumps: 4,
-        requiredConfirmations: 1,
-      },
+    cronos: {
+      url: "https://evm.cronos.org/",
+      chainId: 25,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 10100000000000,
+    },
+    cronosTestnet: {
+      url: "https://evm-t3.cronos.org/",
+      chainId: 338,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 10100000000000,
     },
   },
   etherscan: {
     apiKey: {
-      polkadotTestnet: 'no-api-key-needed',
+      cronos: cronosApiKeyMainnet,
+      cronosTestnet: cronosApiKeyTestnet,
     },
     customChains: [
       {
-        network: 'polkadotTestnet',
-        chainId: 420420417,
+        network: "cronos",
+        chainId: 25,
         urls: {
-          apiURL: 'https://blockscout-testnet.polkadot.io/api',
-          browserURL: 'https://blockscout-testnet.polkadot.io/',
+          apiURL:
+            "https://explorer-api.cronos.org/mainnet/api/v1/hardhat/contract?apikey=" +
+            cronosApiKeyMainnet,
+          browserURL: "https://explorer.cronos.org",
+        },
+      },
+      {
+        network: "cronosTestnet",
+        chainId: 338,
+        urls: {
+          apiURL:
+            "https://explorer-api.cronos.org/testnet/api/v1/hardhat/contract?apikey=" +
+            cronosApiKeyTestnet,
+          browserURL: "https://explorer.cronos.org/testnet",
         },
       },
     ],
