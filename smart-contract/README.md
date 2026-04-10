@@ -1,11 +1,11 @@
 # PropVera — Decentralized Real Estate Platform
 
-A decentralized application (DApp) for real estate asset management, enabling non-custodial listing, fractional ownership, secondary market trading, and automated dividend distribution on the **Polkadot Hub EVM** using USDC as the payment token. Built with Solidity ^0.8.28, Hardhat, and OpenZeppelin, the platform supports secure, transparent real estate transactions with features like multi-admin verification, seller registration, comprehensive portfolio tracking, peer-to-peer share trading, and automated dividend distribution.
+A decentralized application (DApp) for real estate asset management, enabling non-custodial listing, fractional ownership, secondary market trading, and automated dividend distribution on the **Cronos EVM** using USDC as the payment token. Built with Solidity ^0.8.28, Hardhat, and OpenZeppelin, the platform supports secure, transparent real estate transactions with features like multi-admin verification, seller registration, comprehensive portfolio tracking, peer-to-peer share trading, and automated dividend distribution.
 
 [![Solidity](https://img.shields.io/badge/Solidity-^0.8.28-blue)](https://docs.soliditylang.org/)
 [![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-v4.9.6-green)](https://openzeppelin.com/contracts/)
 [![Hardhat](https://img.shields.io/badge/Hardhat-v2.26.3-yellow)](https://hardhat.org/)
-[![Polkadot](https://img.shields.io/badge/Polkadot-Hub%20EVM-e6007a)](https://polkadot.network/)
+[![Cronos](https://img.shields.io/badge/Cronos-EVM-002D74)](https://cronos.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100%25%20Branch-brightgreen)](#testing)
 [![License](https://img.shields.io/badge/License-UNLICENSED-red)](LICENSE)
 
@@ -40,7 +40,7 @@ PropVera is a comprehensive decentralized platform designed to revolutionize rea
 - **Multi-Admin System**: Distributed verification and management authority
 - **Dividend Distribution**: Automated proportional payouts to fractional investors
 - **Complete Transparency**: All transactions and ownership tracked on-chain
-- **Polkadot Integration**: Built on Polkadot Hub EVM for cross-chain interoperability
+- **Cronos Integration**: Built on Cronos EVM for high-performance EVM-compatible transactions
 
 ### Key Goals
 
@@ -413,9 +413,9 @@ module.exports = {
     },
   },
   networks: {
-    polkadotTestnet: {
-      url: "https://services.polkadothub-rpc.com/testnet",
-      chainId: 420420417,
+    cronosTestnet: {
+      url: "https://evm-t3.cronos.org/",
+      chainId: 338,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
       ignition: {
         blockPollingInterval: 1_000,
@@ -426,14 +426,14 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: { polkadotTestnet: "no-api-key-needed" },
+    apiKey: { cronosTestnet: "no-api-key-needed" },
     customChains: [
       {
-        network: "polkadotTestnet",
-        chainId: 420420417,
+        network: "cronosTestnet",
+        chainId: 338,
         urls: {
-          apiURL: "https://blockscout-testnet.polkadot.io/api",
-          browserURL: "https://blockscout-testnet.polkadot.io/",
+          apiURL: "https://explorer.cronos.org/testnet/api",
+          browserURL: "https://explorer.cronos.org/testnet/",
         },
       },
     ],
@@ -517,6 +517,8 @@ All files                     |      100 |      100 |      100 |      100 |
 
 ## Deployment
 
+This project uses **Hardhat Ignition** for deterministic, declarative deployments. The module is located at `ignition/modules/deploy.js`.
+
 ### Local Deployment
 
 ```bash
@@ -524,51 +526,68 @@ All files                     |      100 |      100 |      100 |      100 |
 npx hardhat node
 
 # Terminal 2: Deploy
-npx hardhat run scripts/deploy.js --network localhost
+npx hardhat ignition deploy ignition/modules/deploy.js --network localhost
 ```
 
-### Testnet Deployment
+### Testnet Deployment (Cronos Testnet)
 
 ```bash
-npx hardhat run scripts/deploy.js --network polkadotTestnet
+npx hardhat ignition deploy ignition/modules/deploy.js --network cronosTestnet
 ```
 
-The deploy script:
+The Ignition module (`PropVeraFullDeployment`) deploys all contracts in one atomic run:
 1. Deploys `PropVeraFractionalToken`
 2. Deploys `MockUSDC`
-3. Deploys `PropVera` with both token addresses
-4. Calls `setPropVera` to permanently wire the fractional token
-5. Calls `setMinter` to grant PropVera minting rights on MockUSDC
-6. Adds both admin addresses
+3. Deploys `USDCFaucet`
+4. Deploys `PropVera` with both token addresses
+5. Calls `setPropVera` to permanently wire the fractional token
+6. Calls `setMinter` to grant PropVera minting rights on MockUSDC
+
+Deployed addresses are written to:
+```
+ignition/deployments/chain-338/deployed_addresses.json
+```
 
 ### Contract Verification
 
+Hardhat Ignition supports batch verification after deployment:
+
 ```bash
-# PropVeraFractionalToken
-npx hardhat verify --network polkadotTestnet 0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06  
+npx hardhat ignition verify chain-338 --network cronosTestnet
+```
 
+Or verify each contract individually:
+
+```bash
 # MockUSDC
-npx hardhat verify --network polkadotTestnet 0x1807F7c4984f5188e948C2e828fadE1b2F0011eb  
+npx hardhat verify --network cronosTestnet 0x6C24c00a08e088f84b7e72588509b93133BCEd5b
 
-# PropVera (with constructor args)
-npx hardhat verify --network polkadotTestnet 0xdF6A1Da673B623D9e1c6c538f4653d4429284429 ` 
-  "0x1807F7c4984f5188e948C2e828fadE1b2F0011eb" ` 
-  "0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06" 
+# PropVeraFractionalToken
+npx hardhat verify --network cronosTestnet 0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff
+
+# USDCFaucet
+npx hardhat verify --network cronosTestnet 0x10e60A87ceFF98456F69663f24483bC9b8a662B7
+
+# PropVera (pass constructor args: fractionalToken, usdcToken)
+npx hardhat verify --network cronosTestnet 0x445d64454aEe5dDB67413b9e8334767AFEd06f21 \
+  "0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff" \
+  "0x6C24c00a08e088f84b7e72588509b93133BCEd5b"
 ```
 
 ---
 
 ## Deployed Contracts
 
-**Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
+**Network**: Cronos Testnet (Chain ID: 338)
 
 | Contract | Address | Explorer |
 |----------|---------|---------|
-| `PropVera` | `0xdF6A1Da673B623D9e1c6c538f4653d4429284429` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xdF6A1Da673B623D9e1c6c538f4653d4429284429#code) |
-| `PropVeraFractionalToken` | `0x1807F7c4984f5188e948C2e828fadE1b2F0011eb` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0x1807F7c4984f5188e948C2e828fadE1b2F0011eb#code) |
-| `MockUSDC` | `0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06#code) |
+| `PropVera` | `0x445d64454aEe5dDB67413b9e8334767AFEd06f21` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x445d64454aEe5dDB67413b9e8334767AFEd06f21#code) |
+| `PropVeraFractionalToken` | `0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff#code) |
+| `MockUSDC` | `0x6C24c00a08e088f84b7e72588509b93133BCEd5b` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x6C24c00a08e088f84b7e72588509b93133BCEd5b#code) |
+| `USDCFaucet` | `0x10e60A87ceFF98456F69663f24483bC9b8a662B7` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x10e60A87ceFF98456F69663f24483bC9b8a662B7#code) |
 
-All contracts are **verified** on Blockscout. Source code is publicly readable and ABI-accessible directly from the explorer.
+All 4 contracts are **deployed and verified** on Cronos Explorer via Hardhat Ignition (`PropVeraFullDeployment`, chain-338). Source code is publicly readable and ABI-accessible directly from the explorer.
 
 ---
 
@@ -614,7 +633,7 @@ All contracts are **verified** on Blockscout. Source code is publicly readable a
 | Module bridge inlining | Abstract internal functions → zero call overhead |
 | Single-pass array sizing | Count then allocate — avoids dynamic resizing |
 
-### Estimated Gas Costs (Polkadot Hub EVM)
+### Estimated Gas Costs (Cronos EVM)
 
 | Function | Estimated Gas |
 |----------|--------------|
@@ -662,7 +681,7 @@ All contracts are **verified** on Blockscout. Source code is publicly readable a
 - [ ] Documentation updated
 - [ ] No `console.log` in production contracts
 - [ ] Gas optimizations considered
-- [ ] Verified on Polkadot Hub testnet before mainnet PR
+- [ ] Verified on Cronos testnet before mainnet PR
 
 ---
 
@@ -687,18 +706,18 @@ All contracts are **verified** on Blockscout. Source code is publicly readable a
 
 - **OpenZeppelin** — For secure, audited smart contract libraries
 - **Hardhat** — For excellent Solidity development tooling
-- **Polkadot** — For EVM-compatible cross-chain infrastructure
-- **Blockscout** — For open-source block explorer and contract verification
+- **Cronos / Crypto.com** — For high-speed EVM-compatible infrastructure
+- **Cronos Explorer** — For open-source block explorer and contract verification
 
 ---
 
 ## Resources
 
-- [Polkadot Hub EVM Docs](https://docs.polkadot.network)
+- [Cronos EVM Docs](https://docs.cronos.org)
 - [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts)
 - [Hardhat Documentation](https://hardhat.org/docs)
 - [Ethers.js Documentation](https://docs.ethers.io)
-- [Blockscout Explorer](https://blockscout-testnet.polkadot.io)
+- [Cronos Explorer](https://explorer.cronos.org/testnet)
 
 ---
 

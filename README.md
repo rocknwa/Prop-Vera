@@ -1,37 +1,37 @@
 # PropVera
 
-**Democratizing Real Estate Investment on Polkadot Hub EVM**
+**Democratizing Real Estate Investment on Cronos EVM**
 
 [![License: UNLICENSED](https://img.shields.io/badge/License-UNLICENSED-red.svg)](LICENSE)
 [![Solidity](https://img.shields.io/badge/Solidity-^0.8.28-blue.svg)](https://soliditylang.org/)
-[![Polkadot](https://img.shields.io/badge/Network-Polkadot_Hub_EVM-e6007a.svg)](https://polkadot.network/)
+[![Cronos](https://img.shields.io/badge/Network-Cronos_EVM-002D74.svg)](https://cronos.org/)
 [![Tests](https://img.shields.io/badge/Tests-158_Passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/Test_Coverage-100%25_Branch-brightgreen.svg)](#testing)
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js_16-black.svg)](https://nextjs.org/)
 
 > **Invest in real estate with any amount. Own property with on-chain proof.**
 
-PropVera is a decentralized application (DApp) that removes traditional barriers to real estate investment by enabling fractional ownership, transparent transactions, and verifiable property rights — all powered by blockchain technology on Polkadot Hub EVM.
+PropVera is a decentralized application (DApp) that removes traditional barriers to real estate investment by enabling fractional ownership, transparent transactions, and verifiable property rights — all powered by blockchain technology on Cronos EVM.
 
 ## 🔗 Quick Links
 
 - **Live Demo**: https://prop-vera.vercel.app/
-- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true 
+- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true
 
 ---
 
 ## 🏗️ Deployed Contracts
 
-**Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
+**Network**: Cronos Testnet (Chain ID: 338)
 
 | Contract | Address | Explorer |
-|----------|---------|---------|
-| `PropVera` | `0xdF6A1Da673B623D9e1c6c538f4653d4429284429` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xdF6A1Da673B623D9e1c6c538f4653d4429284429#code) |
-| `PropVeraFractionalToken` | `0x1807F7c4984f5188e948C2e828fadE1b2F0011eb` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0x1807F7c4984f5188e948C2e828fadE1b2F0011eb#code) |
-| `MockUSDC` | `0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06#code) |
-| `USDCFaucet` | `0xA53860Ff96067c0632fB498bf777807D8B55Da8a` | [View on Blockscout](https://blockscout-testnet.polkadot.io/address/0xA53860Ff96067c0632fB498bf777807D8B55Da8a#code) |
+|----------|---------|----|
+| `PropVera` | `0x445d64454aEe5dDB67413b9e8334767AFEd06f21` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x445d64454aEe5dDB67413b9e8334767AFEd06f21) |
+| `PropVeraFractionalToken` | `0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff) |
+| `MockUSDC` | `0x6C24c00a08e088f84b7e72588509b93133BCEd5b` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x6C24c00a08e088f84b7e72588509b93133BCEd5b) |
+| `USDCFaucet` | `0x10e60A87ceFF98456F69663f24483bC9b8a662B7` | [View on Cronos Explorer](https://explorer.cronos.org/testnet/address/0x10e60A87ceFF98456F69663f24483bC9b8a662B7) |
 
-All 4 contracts are **deployed and verified** on Blockscout with source code publicly readable.
+All 4 contracts are **deployed and verified** on Cronos Testnet Explorer with source code publicly readable.
 
 ---
 
@@ -52,7 +52,7 @@ Real estate investment has historically been inaccessible to average investors d
 
 ## 💡 Our Solution
 
-PropVera leverages blockchain technology to make real estate investment:
+PropVera leverages blockchain technology on Cronos EVM to make real estate investment:
 
 ### **Accessible**
 - Fractional ownership starting with **any amount** (even as low as $5)
@@ -61,7 +61,7 @@ PropVera leverages blockchain technology to make real estate investment:
 - Buy properties remotely with on-chain proof of ownership
 
 ### **Transparent**
-- Every transaction recorded immutably on Polkadot Hub blockchain
+- Every transaction recorded immutably on Cronos blockchain
 - Complete ownership history and verification status publicly viewable
 - Smart contracts eliminate ambiguity in agreements
 - Real-time portfolio tracking
@@ -70,7 +70,7 @@ PropVera leverages blockchain technology to make real estate investment:
 - **Secondary marketplace** for peer-to-peer share trading
 - Sell your fractional ownership anytime without waiting for full property sales
 - Instant settlement via smart contracts
-- Ultra-low trading fees on Polkadot Hub EVM
+- Ultra-low gas fees on Cronos EVM
 
 ### **Secure**
 - Non-custodial design — you control your assets
@@ -94,27 +94,20 @@ PropVera leverages blockchain technology to make real estate investment:
 
 ---
 
-## 🚀 Competitive Edge
+## 🚀 Why Cronos?
 
-### **Account Abstraction — Seamless Onboarding** *(Roadmap)*
-- **Gasless Transactions**: Investors don't need to hold native tokens for gas
-- **Social Recovery**: Recover wallets via phone numbers or trusted contacts
-- **Web2-Like Experience**: Email/phone login eliminates crypto complexity for mainstream users
+PropVera is purpose-built for the Cronos ecosystem and Cronos Ignition:
 
-### **Seamless Fiat On/Off Ramps** *(Roadmap)*
-- **Direct Fiat Integration**: Buy property with credit cards or bank transfers
-- **Local Payment Methods**: Support for region-specific payment rails worldwide
-- **Instant Cashouts**: Sell shares and withdraw to bank accounts
+| Cronos Advantage | PropVera Benefit |
+|---|---|
+| **~2s block times** | Near-instant property purchase confirmations |
+| **EVM-compatible** | Full Solidity + OpenZeppelin toolchain, no rewrites needed |
+| **Low gas fees** | Enables micro-transactions — buy fractional shares for as little as $5 |
+| **USDC liquidity** | Native stablecoin payments eliminate crypto price volatility for real estate |
+| **Growing DeFi ecosystem** | Roadmap: PVF fractional tokens as collateral in Cronos DeFi lending protocols |
+| **Crypto.com reach** | Access to 80M+ Crypto.com users as potential real estate investors |
 
-### **AI-Powered User Experience** *(Roadmap)*
-- **Intelligent Assistant**: AI educates and guides users through every step
-- **Natural Language**: Ask questions in plain English — no technical jargon required
-- **Personalized Support**: Context-aware assistance based on user journey
-
-### **Remote Property Acquisition**
-- **Buy Without Visiting**: Purchase properties anywhere in the world from your device
-- **On-Chain Document Claims**: Retrieve property documents anytime with NFT proof
-- **True borderless investment** with zero geographic friction
+PropVera is positioned to become Cronos's flagship Real World Asset (RWA) protocol, bringing the trillion-dollar real estate market on-chain.
 
 ---
 
@@ -122,7 +115,7 @@ PropVera leverages blockchain technology to make real estate investment:
 
 ### For Investors
 
-1. **Connect Wallet**: Use MetaMask, WalletConnect, or any EVM wallet
+1. **Connect Wallet**: Use MetaMask, WalletConnect, or any EVM wallet on Cronos Testnet
 2. **Get Test USDC**: Click "🪙 Get USDC" in the navbar — the `USDCFaucet` contract mints 10,000 USDC directly to your wallet
 3. **Browse Verified Properties**: View listings on the marketplace or fractional page
 4. **Choose Your Investment**: Buy entire properties or fractional PVF shares
@@ -176,7 +169,7 @@ Seller → registerSeller() → uploadImage(Pinata IPFS) → createAsset(tokenUR
 - **Language**: Solidity ^0.8.28
 - **Framework**: Hardhat v2.26.3
 - **Libraries**: OpenZeppelin v5.6.1 (ERC721URIStorage, ERC20, ReentrancyGuard, SafeERC20, Ownable)
-- **Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
+- **Network**: Cronos Testnet (Chain ID: 338)
 - **Payment Token**: MockUSDC (6 decimals, minter-whitelisted)
 - **Testing**: **158 tests passing, 100% branch coverage**
 
@@ -243,20 +236,11 @@ smart-contract/contracts/
 - Anyone can call `drip()` to receive 10,000 test USDC
 - Rate-limited with configurable cooldown (set to 0 on testnet — unlimited drips)
 - Owner bypass via `ownerDrip()` for manual distributions
-- Drip amount and cooldown adjustable by owner at any time
 
 ### 📷 IPFS Image Uploads
 - Sellers upload property images directly from the create-asset form
 - Images pinned to IPFS via Pinata API — permanently stored and content-addressed
 - IPFS URL embedded in NFT metadata — immutable and decentralized
-- File validation: image type check, 10MB size limit, local preview before upload
-
-### 📱 Mobile Navigation
-- Hamburger menu opens a right-side slide-in drawer on mobile
-- Drawer shows: wallet address, live USDC balance, owner/admin role badge
-- Full "🪙 Get USDC" mint button inside drawer
-- All navigation links with icons — closes automatically on route change
-- Body scroll locked while drawer is open
 
 ### 📊 Financial Features
 - USDC stablecoin transactions — no crypto volatility
@@ -272,20 +256,6 @@ smart-contract/contracts/
 - Anti-rug: fractional assets with investors cannot be delisted
 - AML: capital withdrawals require admin-gated approval
 
-### 🛡️ Anti-Fraud Mechanisms
-
-#### Investor Protection (Anti-Rug)
-```solidity
-if (fractionalAssets[tokenId].totalTokens > 0 ||
-    fractionalAssetBuyers[tokenId].length > 0)
-    revert FractionalizedAssetWithBuyers();
-```
-
-#### Anti-Money Laundering
-```solidity
-if (buyerCanWithdraw[tokenId] == false) revert CannotWithdrawYet();
-```
-
 ---
 
 ## 🚀 Getting Started
@@ -295,15 +265,15 @@ if (buyerCanWithdraw[tokenId] == false) revert CannotWithdrawYet();
 - pnpm >= 9.x
 - MetaMask or any EVM-compatible wallet
 
-### Add Polkadot Hub Testnet to MetaMask
+### Add Cronos Testnet to MetaMask
 
 | Field | Value |
 |-------|-------|
-| Network Name | Polkadot Hub Testnet |
-| RPC URL | `https://services.polkadothub-rpc.com/testnet` |
-| Chain ID | `420420417` |
-| Currency Symbol | `DOT` |
-| Block Explorer | `https://blockscout-testnet.polkadot.io` |
+| Network Name | Cronos Testnet |
+| RPC URL | `https://evm-t3.cronos.org/` |
+| Chain ID | `338` |
+| Currency Symbol | `TCRO` |
+| Block Explorer | `https://explorer.cronos.org/testnet` |
 
 ### Clone & Run
 
@@ -319,8 +289,7 @@ npm install
 npx hardhat compile
 npx hardhat test          # 158 tests
 npx hardhat coverage      # 100% branch coverage
-npx hardhat run scripts/deploy.js --network polkadotTestnet
-npx hardhat run scripts/deployFaucet.js --network polkadotTestnet
+npx hardhat ignition deploy ignition/modules/deploy.js --network cronosTestnet
 ```
 
 **Frontend:**
@@ -340,11 +309,11 @@ Open [http://localhost:3000](http://localhost:3000)
 # Required
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 
-# Contract addresses (Polkadot Hub Testnet)
-NEXT_PUBLIC_PROPVERA_ADDRESS=0xdF6A1Da673B623D9e1c6c538f4653d4429284429
-NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS=0x1807F7c4984f5188e948C2e828fadE1b2F0011eb
-NEXT_PUBLIC_USDC_ADDRESS=0xAdf4d9B286D4c757d5aAce5EE544318F895A0E06
-NEXT_PUBLIC_FAUCET_ADDRESS=0xA53860Ff96067c0632fB498bf777807D8B55Da8a
+# Contract addresses (Cronos Testnet)
+NEXT_PUBLIC_PROPVERA_ADDRESS=0x445d64454aEe5dDB67413b9e8334767AFEd06f21
+NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS=0xb7Aa8b8Be8fd0d07F5d00a94DCb7A187f69b21ff
+NEXT_PUBLIC_USDC_ADDRESS=0x6C24c00a08e088f84b7e72588509b93133BCEd5b
+NEXT_PUBLIC_FAUCET_ADDRESS=0x10e60A87ceFF98456F69663f24483bC9b8a662B7
 
 # Pinata IPFS (for property image uploads)
 # Get JWT from: https://app.pinata.cloud/developers/api-keys
@@ -387,12 +356,7 @@ PropVera and PropVeraFractionalToken  (109 tests)
   ├── Buyer Portfolio
   ├── Display Info Functions
   ├── Fractional Asset Cancellation
-  ├── MockUSDC – full branch coverage
-  ├── PropVeraFractionalToken – full branch coverage
-  ├── AssetMarketplace – uncovered branches
-  ├── Fractionalization – uncovered branches
-  ├── ShareTrading – uncovered branches
-  └── PropVera core – display function branches
+  └── ... full branch coverage across all modules
 
 USDCFaucet  (49 tests)
   ├── Deployment
@@ -412,7 +376,7 @@ USDCFaucet  (49 tests)
 ## 📈 Roadmap
 
 ### ✅ Phase 0 — Core Protocol (Complete)
-- ✅ Modular smart contract architecture (4 contracts deployed and verified)
+- ✅ Modular smart contract architecture (4 contracts deployed and verified on Cronos Testnet)
 - ✅ 158 tests passing, 100% branch coverage
 - ✅ Full Next.js frontend with 8 on-chain integrated pages
 - ✅ Admin dashboard with real on-chain role detection
@@ -422,20 +386,17 @@ USDCFaucet  (49 tests)
 - ✅ USDCFaucet — anyone can mint test USDC with one click
 - ✅ Mobile-responsive with hamburger drawer navigation
 - ✅ Anti-rug and AML mechanisms
-- ✅ Deployed and verified on Polkadot Hub EVM Testnet
 
 ### 🔄 Phase 1 — MVP & Real Estate Partnerships
 **Target TVL: $2M – $10M**
 
 - 🔄 Real estate company partnerships (5–10 verified developers and agencies)
 - 🔄 Housing agency fractionalization programs
-- 🔄 In-platform messaging between buyers and real estate partners
-- 🔄 Digital document request and delivery workflow
-- 🔄 Account abstraction — gasless transactions
+- 🔄 Account abstraction — gasless transactions for Crypto.com App users
 - 🔄 Fiat on/off ramps — credit card and bank transfer support
 - 🔄 AI education assistant for user onboarding and 24/7 support
 - 🔄 Professional smart contract security audit
-- 🔄 Marketing launch and community building
+- 🔄 CRO staking integration — stake CRO to earn yield on platform fees
 
 **Key Metrics**: 5–10 partners · 50+ properties · 1,000+ investors · $2M–$10M TVL
 
@@ -444,9 +405,8 @@ USDCFaucet  (49 tests)
 
 - 🔄 Individual seller registration with KYC/AML
 - 🔄 Random inspector assignment — lawyers and law enforcement verify purchases
-- 🔄 On-chain inspection reports and compliance records
+- 🔄 Cronos DeFi integration — PVF tokens as collateral in lending protocols (VVS Finance, Tectonic)
 - 🔄 AI property valuation and investment recommendations
-- 🔄 Multilingual AI support
 - 🔄 Geographic expansion to 5+ countries
 
 **Key Metrics**: 500+ sellers · 20–50 verified inspectors · 5,000–10,000 investors · $10M–$40M TVL
@@ -454,11 +414,10 @@ USDCFaucet  (49 tests)
 ### 🔄 Phase 3 — Ecosystem Growth & DeFi Integration
 **Target TVL: $40M – $150M**
 
-- 🔄 Institutional partnerships — REITs and property management companies
-- 🔄 Cross-chain USDC bridge from Ethereum, Polygon, and other EVM chains
-- 🔄 Fractional tokens as DeFi collateral in lending protocols
-- 🔄 Automated market makers (AMM) for instant share liquidity
+- 🔄 AMM liquidity pools for PVF tokens on Cronos DEXs (VVS Finance, PhotonSwap)
+- 🔄 Fractional tokens as DeFi collateral
 - 🔄 Fractional REIT products — diversified property portfolios
+- 🔄 Cross-chain bridge via Cronos IBC
 
 **Key Metrics**: 2–4 institutional partners · 20,000+ investors · $50M+ daily trading volume
 
@@ -467,15 +426,11 @@ USDCFaucet  (49 tests)
 
 - 🔄 PropVera DAO — governance token distribution
 - 🔄 Token-holder voting on platform parameters and fees
-- 🔄 Real estate index funds and passive investment products
-- 🔄 Tokenized mortgage market — peer-to-peer home equity fractionalization
 - 🔄 Global regulatory compliance in 20+ countries
-
-**Key Metrics**: Full DAO · 100,000+ community members · 20+ countries · $150M–$500M+ TVL
 
 ---
 
-## ⛽ Gas Costs (Polkadot Hub EVM)
+## ⛽ Gas Costs (Cronos EVM)
 
 | Function | Estimated Gas |
 |----------|--------------|
@@ -516,16 +471,6 @@ UNLICENSED — Proprietary software. All rights reserved.
 
 ---
 
-## 🤝 Contributing
-
-Contributions welcome on specific folders:
-- Smart contracts: `smart-contract/`
-- Frontend UI: `frontend/`
-
-Please open issues for bugs or feature requests.
-
----
-
 ## 👥 Team
 
 **Founder & Solo Developer / Blockchain Architect**: Therock Ani
@@ -535,11 +480,11 @@ Please open issues for bugs or feature requests.
 
 ## 🙏 Acknowledgments
 
-- **Polkadot / Web3 Foundation** for cross-chain EVM infrastructure
+- **Cronos / Crypto.com** for high-speed EVM infrastructure
 - **OpenZeppelin** for battle-tested smart contract libraries
 - **Hardhat** for excellent Solidity development tooling
 - **RainbowKit & Wagmi** for seamless Web3 frontend integration
-- **Blockscout** for open-source block explorer and contract verification
+- **Cronos Explorer** for open-source block explorer and contract verification
 - **Pinata** for IPFS pinning infrastructure
 - **viem** for type-safe Ethereum interactions
 
@@ -549,9 +494,9 @@ Please open issues for bugs or feature requests.
 
 - **Live Demo**: https://prop-vera.vercel.app/
 - **GitHub**: https://github.com/rocknwa/Prop-Vera
-- **Network**: Polkadot Hub EVM Testnet (Chain ID: 420420417)
-- **RPC**: https://services.polkadothub-rpc.com/testnet
-- **Explorer**: https://blockscout-testnet.polkadot.io
+- **Network**: Cronos Testnet (Chain ID: 338)
+- **RPC**: https://evm-t3.cronos.org/
+- **Explorer**: https://explorer.cronos.org/testnet
 
 ---
 
@@ -560,14 +505,14 @@ Please open issues for bugs or feature requests.
 PropVera envisions a world where:
 - **Anyone** can invest in real estate with any amount, from anywhere
 - **Geographic borders** don't limit investment opportunities
-- **Blockchain technology** provides transparent, immutable ownership records
+- **Cronos blockchain** provides fast, low-cost, transparent ownership records
 - **Fractional ownership** democratizes access to stable, income-generating assets
 - **Decentralized governance** ensures platform evolution serves community needs
 
-We're not just building a platform — we're building a **movement** toward financial inclusion and equitable wealth creation through real estate.
+We're not just building a platform — we're building a **movement** toward financial inclusion and equitable wealth creation through real estate on Cronos.
 
 ---
 
-**Built with ❤️ on Polkadot Hub EVM**
+**Built with ❤️ on Cronos EVM**
 
 *Making real estate investment accessible to everyone, one fraction at a time.*

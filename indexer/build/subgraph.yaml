@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: PropVera
-    network: polkadot-hub-testnet
+    network: cronos-testnet
     source:
       address: "0x0000000000000000000000000000000000000000"
       abi: PropVera
@@ -59,7 +59,7 @@ dataSources:
       file: PropVera/PropVera.wasm
   - kind: ethereum
     name: USDCFaucet
-    network: polkadot-hub-testnet
+    network: cronos-testnet
     source:
       address: "0x0000000000000000000000000000000000000000"
       abi: USDCFaucet

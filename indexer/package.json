@@ -1,7 +1,7 @@
 {
   "name": "propvera-subgraph",
   "version": "1.0.0",
-  "description": "Subgraph for indexing PropVera contract events on Polkadot Hub EVM Testnet",
+  "description": "Subgraph for indexing PropVera contract events on Cronos Testnet",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
