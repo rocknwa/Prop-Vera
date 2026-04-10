@@ -13,11 +13,6 @@
 
 PropVera is a decentralized application (DApp) that removes traditional barriers to real estate investment by enabling fractional ownership, transparent transactions, and verifiable property rights — all powered by blockchain technology on Cronos EVM.
 
-## 🔗 Quick Links
-
-- **Live Demo**: https://prop-vera.vercel.app/
-- **Pitch Deck**: https://docs.google.com/presentation/d/1Q4mf5BIHFopnL129gLiw9TEbY8MIFT_m/edit?usp=drivesdk&ouid=117370402690257904012&rtpof=true&sd=true
-
 ---
 
 ## 🏗️ Deployed Contracts
