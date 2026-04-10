@@ -1,6 +1,6 @@
 # PropVera Subgraph
 
-This subgraph indexes all PropVera contract events on Polkadot Hub EVM Testnet into a queryable GraphQL API.
+This subgraph indexes all PropVera contract events on Cronos Testnet into a queryable GraphQL API.
 
 ## Overview
 
@@ -20,7 +20,7 @@ npm install
 ```
 
 2. Update `subgraph.yaml` with actual contract addresses and startBlock:
-   - Find PropVera deployment block on [Blockscout](https://blockscout-testnet.polkadot.io)
+   - Find PropVera deployment block on [Cronos Explorer](https://explorer.cronos.org/testnet)
    - Update `address` fields with deployed contract addresses
    - Update `startBlock` with the deployment block number
 
@@ -56,7 +56,7 @@ goldsky subgraph deploy propvera-subgraph/1.0.0 --path .
 
 ### Alternative: Envio
 
-If Goldsky doesn't support Polkadot Hub EVM yet:
+If Goldsky doesn't support Cronos EVM yet:
 
 1. Sign up at https://envio.dev
 2. Follow their deployment guide for custom networks

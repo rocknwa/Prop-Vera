@@ -253,7 +253,7 @@ export function Navbar() {
         {/* Drawer footer */}
         <div className="px-4 py-4 border-t border-border">
           <p className="text-xs text-muted text-center">
-            Polkadot Hub EVM · Chain ID 420420417
+            Cronos EVM · Chain ID 338
           </p>
         </div>
       </div>

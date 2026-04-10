@@ -9,7 +9,7 @@ export const PROPVERA_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_PROPVERA_ADDRES
 export const PROPVERA_FRACTIONAL_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_FRACTIONAL_TOKEN_ADDRESS as `0x${string}`;
 export const MOCK_USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS as `0x${string}`;
 export const USDC_FAUCET_ADDRESS = process.env.NEXT_PUBLIC_FAUCET_ADDRESS as `0x${string}`;
-export const CHAIN_ID = 420420417;
+export const CHAIN_ID = 338;
 
 // Re-export ABIs with proper names
 export { PROPVERA_ABI };

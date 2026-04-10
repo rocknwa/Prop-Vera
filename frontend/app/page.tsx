@@ -14,7 +14,7 @@ export default function Home() {
               Invest in Real Estate on the Blockchain
             </h1>
             <p className="text-lg text-muted max-w-2xl mx-auto text-balance">
-              PropVera makes real estate investing accessible through decentralized technology on Polkadot Hub. Start building your property portfolio today.
+              PropVera makes real estate investing accessible through decentralized technology on Cronos. Start building your property portfolio today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link href="/marketplace">
@@ -39,7 +39,7 @@ export default function Home() {
               {[
                 {
                   title: "Decentralized",
-                  description: "Built on Polkadot Hub blockchain for transparency and security",
+                  description: "Built on Cronos blockchain for transparency and security",
                 },
                 {
                   title: "Low Minimums",

@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PropVera
-    network: polkadot-hub-testnet  # Note: Update if Goldsky uses different network name
+    network: cronos-testnet  # Note: Update if Goldsky uses different network name
     source:
-      address: "0xdF6A1Da673B623D9e1c6c538f4653d4429284429"  # TODO: Update with actual PropVera contract address
+      address: "0x445d64454aEe5dDB67413b9e8334767AFEd06f21"  # TODO: Update with actual PropVera contract address
       abi: PropVera
-      startBlock: 6554818  # TODO: Update with actual deployment block from Blockscout
+      startBlock: 6554818  # TODO: Update with actual deployment block from Cronos Explorer
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -58,9 +58,9 @@ dataSources:
       file: ./src/propvera.ts
   - kind: ethereum
     name: USDCFaucet
-    network: polkadot-hub-testnet
+    network: cronos-testnet
     source:
-      address: "0xA53860Ff96067c0632fB498bf777807D8B55Da8a"  # TODO: Update with actual USDCFaucet contract address
+      address: "0x10e60A87ceFF98456F69663f24483bC9b8a662B7"  # TODO: Update with actual USDCFaucet contract address
       abi: USDCFaucet
       startBlock: 6626213  # TODO: Update with actual deployment block
     mapping:

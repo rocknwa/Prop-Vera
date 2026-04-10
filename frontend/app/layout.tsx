@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "PropVera - Decentralized Real Estate Investment",
   description:
-    "Invest in real estate properties through decentralized blockchain technology on Polkadot Hub",
+    "Invest in real estate properties through decentralized blockchain technology on Cronos",
   icons: {
     icon: "/favicon.ico",
   },
