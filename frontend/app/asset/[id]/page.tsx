@@ -42,6 +42,13 @@ export default function AssetPage({ params }: { params: Promise<{ id: string }> 
     address: MOCK_USDC_ADDRESS, abi: MOCK_USDC_ABI, functionName: "allowance",
     args: address ? [address, PROPVERA_CONTRACT_ADDRESS] : undefined, query: { enabled: !!address },
   });
+  // Read raw pricePerToken directly from storage (USDC wei, 6 decimals, no integer division).
+  // getAssetDisplayInfo truncates decimals via usdcFromWei (e.g. 60.1 USDC -> 60),
+  // so approvals derived from it are too low and the tx fails.
+  const { data: rawFractionalData } = useReadContract({
+    address: PROPVERA_CONTRACT_ADDRESS, abi: PROPVERA_ABI, functionName: "fractionalAssets",
+    args: [tokenId],
+  });
   const { data: usdcBalance } = useReadContract({
     address: MOCK_USDC_ADDRESS, abi: MOCK_USDC_ABI, functionName: "balanceOf",
     args: address ? [address] : undefined, query: { enabled: !!address },
@@ -71,8 +78,15 @@ export default function AssetPage({ params }: { params: Promise<{ id: string }> 
   const balance = (usdcBalance as bigint) || 0n;
   const pct = a.isFractionalized && a.totalFractionalTokens > 0
     ? Math.round(((Number(a.totalFractionalTokens) - Number(a.remainingFractionalTokens)) / Number(a.totalFractionalTokens)) * 100) : 0;
+  // Use raw pricePerToken (already in USDC wei) if available, otherwise fall back to display value * 1e6
+  const rawPricePerTokenWei: bigint = rawFractionalData
+    ? (rawFractionalData as any).pricePerToken ?? (rawFractionalData as any)[2] ?? 0n
+    : 0n;
   const fracCost = fracAmt ? BigInt(fracAmt) * BigInt(a.pricePerFractionalTokenInEth.toString()) : 0n;
-  const fracCostWei = fracCost * 1_000_000n;
+  // fracCostWei uses the exact on-chain amount to avoid truncation-caused under-approvals
+  const fracCostWei = fracAmt && rawPricePerTokenWei > 0n
+    ? BigInt(fracAmt) * rawPricePerTokenWei
+    : fracCost * 1_000_000n;
   const isBuyer = address && a.currentBuyer?.toLowerCase() === address.toLowerCase();
 
   const approveUSDC = (amount: bigint) => {

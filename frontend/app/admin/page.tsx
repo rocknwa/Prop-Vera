@@ -143,8 +143,8 @@ export default function AdminPage() {
                 {verified.map((a: any) => {
                   const meta = parseTokenURI(a.tokenURI || "");
                   const tid = a.tokenId.toString();
-                  const totalTokens = fracTokens[tid] || "100";
-                  const ppt = Number(totalTokens) > 0 ? (Number(a.priceInEth) / Number(totalTokens)).toFixed(4) : "0";
+                  const totalTokens = fracTokens[tid] || "";
+                  const ppt = Number(totalTokens) > 0 ? (Number(a.priceInEth) / Number(totalTokens)).toFixed(4) : "—";
                   const tokenId = BigInt(tid) as bigint;
                   return (
                     <div key={tid} className="p-4 border border-border rounded-lg">
@@ -158,16 +158,33 @@ export default function AdminPage() {
                       <div className="flex gap-3 items-end">
                         <div className="flex-1">
                           <label className="text-xs text-muted block mb-1">Total PVF tokens to issue</label>
-                          <input type="number" value={totalTokens}
-                            onChange={e => setFracTokens(p => ({ ...p, [tid]: e.target.value }))}
-                            className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background" placeholder="100" />
+                          <div className="flex items-center border border-border rounded-md overflow-hidden bg-background">
+                            <button
+                              type="button"
+                              className="px-3 py-2 text-sm font-bold hover:bg-muted/20 select-none"
+                              onClick={() => setFracTokens(p => ({ ...p, [tid]: String(Math.max(1, Number(p[tid] || "0") - 1)) }))}
+                            >−</button>
+                            <input
+                              type="number"
+                              min="1"
+                              value={fracTokens[tid] ?? ""}
+                              onChange={e => setFracTokens(p => ({ ...p, [tid]: e.target.value }))}
+                              className="flex-1 px-2 py-2 text-sm text-center bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              placeholder="e.g. 100"
+                            />
+                            <button
+                              type="button"
+                              className="px-3 py-2 text-sm font-bold hover:bg-muted/20 select-none"
+                              onClick={() => setFracTokens(p => ({ ...p, [tid]: String(Number(p[tid] || "0") + 1) }))}
+                            >+</button>
+                          </div>
                         </div>
                         <div className="flex-1">
                           <label className="text-xs text-muted block mb-1">Price per token (USDC)</label>
                           <input readOnly value={ppt} className="w-full px-3 py-2 border border-border rounded-md text-sm bg-muted/20" />
                         </div>
-                        <Button size="sm" disabled={isPending}
-                          onClick={() => { writeContract({ address: PROPVERA_CONTRACT_ADDRESS, abi: PROPVERA_ABI, functionName: "createFractionalAsset", args: [tokenId, BigInt(totalTokens || "100")] }); setTxStatus("Fractionalizing..."); }}>
+                        <Button size="sm" disabled={isPending || !fracTokens[tid] || Number(fracTokens[tid]) < 1}
+                          onClick={() => { writeContract({ address: PROPVERA_CONTRACT_ADDRESS, abi: PROPVERA_ABI, functionName: "createFractionalAsset", args: [tokenId, BigInt(fracTokens[tid] || "0")] }); setTxStatus("Fractionalizing..."); }}>
                           Fractionalize
                         </Button>
                       </div>
