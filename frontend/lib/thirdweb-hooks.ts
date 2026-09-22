@@ -58,10 +58,14 @@ export function useReadContract(options: ContractOptions) {
     enabled: query?.enabled ?? true,
     refetchInterval: query?.refetchInterval,
     queryFn: () =>
-      readContract({
+      // This shim dispatches by ABI + functionName at runtime, so it can't
+      // participate in thirdweb's compile-time generic method inference.
+      // Casting through `any` here (rather than `never` on individual
+      // fields) avoids collapsing the whole call's argument type to `never`.
+      (readContract as any)({
         contract: contractFor(options),
-        method: abiMethod(abi, functionName) as never,
-        params: args as never,
+        method: abiMethod(abi, functionName),
+        params: args,
       }),
   });
 }
@@ -70,10 +74,10 @@ export function useWriteContract() {
   const send = useSendTransaction();
 
   const writeContract = (options: Omit<ContractOptions, "query">) => {
-    const transaction = prepareContractCall({
+    const transaction = (prepareContractCall as any)({
       contract: contractFor(options),
-      method: abiMethod(options.abi, options.functionName) as never,
-      params: (options.args || []) as never,
+      method: abiMethod(options.abi, options.functionName),
+      params: options.args || [],
     });
     send.mutate(transaction);
   };
