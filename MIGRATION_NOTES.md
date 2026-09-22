@@ -56,6 +56,23 @@
   access to resolve thirdweb v5 and refresh `pnpm-lock.yaml`, then run the build
   with a real `NEXT_PUBLIC_THIRDWEB_CLIENT_ID`.
 
+### Lockfile verification retry
+
+The lockfile follow-up was retried with a normal, online `pnpm install`. The
+environment's configured proxy returned HTTP 403 for
+`https://registry.npmjs.org/thirdweb`. The npm mirror, Yarn registry, unpkg,
+jsDelivr, and the thirdweb GitHub repository were also blocked by the same
+proxy. Bypassing the proxy was attempted, but the sandbox has no direct DNS or
+network route. No thirdweb package metadata or tarball exists in the local pnpm
+cache.
+
+Because neither the published thirdweb dependency graph nor package artifacts
+were available, the stale lockfile was **not** replaced with a fabricated,
+unverifiable entry. Consequently `pnpm install`, TypeScript compilation, and the
+Next.js build cannot be confirmed in this environment; this migration must not
+be treated as build-verified until the install and build above succeed in an
+environment with npm registry access.
+
 ## Unchanged scope
 
 - No file under `smart-contract/` or `indexer/` was modified.
