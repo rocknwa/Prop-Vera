@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "@/lib/thirdweb-hooks";
 import { NavbarClient } from "@/components/navbar-client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

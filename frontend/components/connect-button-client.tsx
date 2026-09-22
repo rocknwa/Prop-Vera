@@ -1,16 +1,21 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-// Dynamically import ConnectButton to prevent SSR issues
-const DynamicConnectButton = dynamic(
-  () => import("@rainbow-me/rainbowkit").then((mod) => ({ default: mod.ConnectButton })),
-  {
-    ssr: false,
-    loading: () => <div className="h-10 w-32 bg-muted rounded-lg animate-pulse" />,
-  }
-);
+import { ConnectButton } from "thirdweb/react";
+import {
+  accountAbstraction,
+  cronosTestnet,
+  supportedWallets,
+  thirdwebClient,
+} from "@/lib/thirdweb";
 
 export function ConnectButtonClient() {
-  return <DynamicConnectButton />;
+  return (
+    <ConnectButton
+      client={thirdwebClient}
+      chain={cronosTestnet}
+      wallets={supportedWallets}
+      accountAbstraction={accountAbstraction}
+      connectButton={{ label: "Sign in or connect" }}
+    />
+  );
 }

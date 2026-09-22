@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "@/lib/thirdweb-hooks";
 import { ConnectButtonClient } from "./connect-button-client";
 import { cn } from "@/lib/utils";
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI, MOCK_USDC_ADDRESS, MOCK_USDC_ABI, USDC_FAUCET_ADDRESS, USDC_FAUCET_ABI } from "@/lib/contracts";

@@ -1,5 +1,5 @@
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { useAccount } from "wagmi"
+import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "@/lib/thirdweb-hooks"
+import { useAccount } from "@/lib/thirdweb-hooks"
 import {
   PROPVERA_CONTRACT_ADDRESS,
   PROPVERA_ABI,

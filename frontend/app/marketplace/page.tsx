@@ -1,6 +1,6 @@
 "use client";
 
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract, useAccount } from "@/lib/thirdweb-hooks";
 import { NavbarClient } from "@/components/navbar-client";
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI } from "@/lib/contracts";
 import Link from "next/link";
