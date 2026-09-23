@@ -28,7 +28,9 @@ export const supportedWallets = [
   createWallet("io.rabby"),
 ];
 
-export const accountAbstraction = {
-  chain: cronosTestnet,
-  sponsorGas: true,
-} as const;
+// Account abstraction intentionally omitted: thirdweb's bundler/paymaster
+// infrastructure does not cover Cronos Testnet (chain 338) — only Cronos
+// zkEVM (240/388), a different chain. Connected wallets, including in-app
+// (email/Google) ones, act as normal signer wallets and pay their own gas.
+// See MIGRATION_NOTES.md for the earlier "Failed to connect to Smart
+// Account" issue this resolves.
