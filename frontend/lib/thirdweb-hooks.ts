@@ -9,6 +9,7 @@ import {
 } from "thirdweb";
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { cronosTestnet, thirdwebClient } from "./thirdweb";
+import { toQueryKeyValue } from "./query-key";
 
 type ContractOptions = {
   address: `0x${string}`;
@@ -54,7 +55,7 @@ export function useAccount() {
 export function useReadContract(options: ContractOptions) {
   const { address, abi, functionName, args = [], query } = options;
   return useQuery<any>({
-    queryKey: ["thirdweb-read", cronosTestnet.id, address, functionName, args],
+    queryKey: ["thirdweb-read", cronosTestnet.id, address, functionName, toQueryKeyValue(args)],
     enabled: query?.enabled ?? true,
     refetchInterval: query?.refetchInterval,
     queryFn: () =>

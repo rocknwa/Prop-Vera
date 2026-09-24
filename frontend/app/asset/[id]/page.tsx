@@ -76,7 +76,7 @@ export default function AssetPage({ params }: { params: Promise<{ id: string }> 
   const priceWei = BigInt(a.priceInEth.toString()) * 1_000_000n;
   const allowance = (usdcAllowance as bigint) || 0n;
   const balance = (usdcBalance as bigint) || 0n;
-  const pct = a.isFractionalized && a.totalFractionalTokens > 0
+  const pct = a.isFractionalized && a.totalFractionalTokens > 0n
     ? Math.round(((Number(a.totalFractionalTokens) - Number(a.remainingFractionalTokens)) / Number(a.totalFractionalTokens)) * 100) : 0;
   // Use raw pricePerToken (already in USDC wei) if available, otherwise fall back to display value * 1e6
   const rawPricePerTokenWei: bigint = rawFractionalData
