@@ -114,3 +114,39 @@ environment with npm registry access.
   could not be opened end-to-end here and URL prefill support was **not** claimed.
   The address stays visible and selectable if either the clipboard or faucet is
   unavailable.
+
+### Connected-state runtime crash follow-up
+
+- The reported `AccountProviderContext not found` exception was traced to the
+  installed `thirdweb@5.121.4` ConnectButton's connected-account presentation.
+  `NativeGasProvider` only consumes `useActiveAccount` and its own React context;
+  it does not import or render thirdweb's `AccountName`, `AccountAvatar`, or
+  `AccountProvider`. The application likewise does not use those composable
+  account UI components. The error appears only when the default ConnectButton
+  changes from its disconnected sign-in UI to its connected-account UI, which
+  identifies that library branch—not the native-balance context—as the source.
+- The whole application was deliberately **not** wrapped in `AccountProvider`.
+  That provider belongs around thirdweb's composable account-display children,
+  and adding it globally would hide rather than correct the ownership mismatch.
+  PropVera now uses the existing ConnectButton only while disconnected, retaining
+  its email, Google, MetaMask, WalletConnect, Coinbase Wallet, and Rabby choices.
+  Once `useActiveAccount` reports success, a local connected-address/disconnect
+  control replaces the faulty thirdweb presentation. The active thirdweb account
+  itself remains unchanged, so native-balance checks and contract signing still
+  use the same email/social or external wallet address.
+- Runtime-path verification was based on the explicit state boundary: the
+  connected branch no longer mounts ConnectButton (and therefore cannot mount its
+  failing AccountName/AccountAvatar path), while the disconnected branch retains
+  the same client, chain 338, and wallet configuration. End-to-end authentication
+  with real email, Google, and third-party wallet credentials is not automatable
+  in this non-interactive environment; those paths share the same post-connect
+  `useActiveAccount` branch and are therefore covered by the same fix. Balance
+  focus/visibility refresh and the low-TCRO USDC guard were left intact.
+- The dependency install was also retried for this follow-up. The lockfile still
+  resolves thirdweb 5.121.4, but the registry proxy returned HTTP 403 while
+  fetching `cosmiconfig-7.1.0.tgz`. That failed install left the local dependency
+  tree incomplete, so the subsequent local type-check reports missing `next`,
+  `thirdweb`, and `viem` modules and a new production build cannot be honestly
+  reported from this run. The preceding onboarding commit had passed both checks
+  before the environment's dependency tree was removed; this runtime fix still
+  requires CI or an environment with registry access to repeat them.
