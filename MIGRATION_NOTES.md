@@ -171,7 +171,7 @@ environment with npm registry access.
   login and external-wallet connection because both populate the same thirdweb
   active-account hook.
 
-### Desktop navbar follow-up
+### Desktop navbar experiment (subsequently reverted)
 
 - The desktop overflow came from rendering seven navigation links, the TCRO and
   USDC balances, Get USDC, the connected address, Disconnect, and a second TCRO
@@ -187,3 +187,39 @@ environment with npm registry access.
   navigation is used instead of squeezing links into the account controls; at
   1920px the complete navigation fits in one row. The body also guards against
   accidental horizontal overflow as a final layout containment measure.
+
+### Asset-detail runtime and navbar correction
+
+- The shared `/asset/[id]` failure was traced to the thirdweb compatibility
+  hook's React Query key, not to a particular asset or link. Asset-detail reads
+  pass `tokenId` as a `bigint`; the wrapper placed the raw arguments into a query
+  key, and TanStack Query hashes that key with JSON serialization. Native
+  `bigint` is not JSON-serializable, so every valid asset ID threw during render
+  before its contract read could complete. wagmi had previously normalized its
+  own query keys, which is why this appeared after the wallet migration.
+- Contract RPC arguments remain unchanged, but their query-key copy is now
+  recursively normalized to a stable `{ $bigint: "..." }` value. Runtime checks
+  JSON-serialized keys for multiple token IDs without error and confirmed that
+  distinct IDs remain distinct. A second latent detail-page error was also fixed:
+  the fractional-token count is a `bigint` and must be compared with `0n`, not
+  the number `0`.
+- Marketplace, Share Marketplace, Fractional, Seller, and Dashboard already link
+  to `/asset/<tokenId>`. The reusable `AssetCard` was the sole inconsistent entry
+  point and was corrected from `/assets/<id>` to `/asset/<id>`, so all current
+  asset links converge on the repaired shared route.
+- The later `2xl` navbar experiment was reverted as requested: desktop links are
+  visible again from `lg`, the original `max-w-7xl` layout is restored, and the
+  drawer remains the mobile/tablet navigation. The duplicate TCRO readout stays
+  removed from the address control, leaving TCRO once beside USDC. The global
+  `overflow-x-hidden` workaround was removed.
+- Verification in this environment executed the query-key normalization with
+  token IDs 1, 2, 17, and 999 and confirmed that every key JSON-serializes and
+  stays distinct. A repository-wide entry-point check confirmed Marketplace,
+  Share Marketplace, Dashboard, Fractional, Seller, and `AssetCard` all target
+  the singular `/asset/<id>` route. Real contract-backed navigation and
+  email/Google or extension-wallet sessions could not be run because outbound
+  registry and Cronos RPC access are blocked. The required install was retried,
+  but npm returned HTTP 403 for `babel-plugin-macros-3.1.0.tgz`; the interrupted
+  install then left `next`, `thirdweb`, and `viem` unavailable, so type-check and
+  production-build retries fail on missing dependencies rather than source
+  diagnostics.
