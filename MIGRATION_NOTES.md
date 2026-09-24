@@ -170,3 +170,20 @@ environment with npm registry access.
   from the faucet. These behaviors apply identically after email/Google in-app
   login and external-wallet connection because both populate the same thirdweb
   active-account hook.
+
+### Desktop navbar follow-up
+
+- The desktop overflow came from rendering seven navigation links, the TCRO and
+  USDC balances, Get USDC, the connected address, Disconnect, and a second TCRO
+  value in one non-wrapping row at the old `lg` breakpoint. The combined minimum
+  width exceeded the navbar's previous `max-w-7xl` container at common laptop and
+  desktop viewport sizes.
+- TCRO was removed from the connected-address control, leaving one TCRO value in
+  the desktop balance group (and one in the existing mobile drawer). The address
+  remains cleanly truncated with its full value available as a title, while Get
+  USDC and Disconnect remain direct actions.
+- The full navigation now appears at Tailwind's `2xl` breakpoint, where it has a
+  wider 1600px-capped container. At 1024, 1280, and 1440px the unchanged drawer
+  navigation is used instead of squeezing links into the account controls; at
+  1920px the complete navigation fits in one row. The body also guards against
+  accidental horizontal overflow as a final layout containment measure.

@@ -107,7 +107,7 @@ export function Navbar() {
     <>
       {/* ── Top bar ────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur">
-        <nav className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full gap-3">
+        <nav className="flex h-16 min-w-0 items-center justify-between gap-3 px-4 sm:px-6 2xl:px-8 max-w-[1600px] mx-auto w-full">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -118,7 +118,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden min-w-0 2xl:flex items-center gap-1">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}
                 className={cn(
@@ -153,7 +153,7 @@ export function Navbar() {
             {/* Hamburger — mobile only */}
             <button
               onClick={() => setDrawerOpen(true)}
-              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-md border border-border text-foreground hover:bg-muted/50 transition-colors"
+              className="2xl:hidden flex items-center justify-center h-9 w-9 rounded-md border border-border text-foreground hover:bg-muted/50 transition-colors"
               aria-label="Open menu">
               <MenuIcon />
             </button>
@@ -164,14 +164,14 @@ export function Navbar() {
       {/* ── Mobile drawer overlay ───────────────────────────────────────────── */}
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm 2xl:hidden"
           onClick={() => setDrawerOpen(false)}
         />
       )}
 
       {/* ── Mobile drawer panel ─────────────────────────────────────────────── */}
       <div className={cn(
-        "fixed top-0 right-0 z-50 h-full w-72 bg-background border-l border-border shadow-2xl flex flex-col lg:hidden",
+        "fixed top-0 right-0 z-50 h-full w-72 bg-background border-l border-border shadow-2xl flex flex-col 2xl:hidden",
         "transition-transform duration-300 ease-in-out",
         drawerOpen ? "translate-x-0" : "translate-x-full"
       )}>
