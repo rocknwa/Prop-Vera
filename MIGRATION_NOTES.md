@@ -247,3 +247,11 @@ environment with npm registry access.
 - The drawer's Get 10,000 Test USDC action, insufficient-gas explanation, role
   badge, connected-address indicator, and navigation remain unchanged. The
   desktop navbar and global TCRO onboarding warning were not modified.
+
+### Desktop USDC balance cleanup
+
+- Removed the standalone USDC balance label beside Get USDC in the desktop
+  navbar. Get USDC remains directly available, while the compact account button
+  continues to show TCRO and the shortened address. USDC is now displayed only
+  inside the account menu alongside the full address, TCRO, copy, and disconnect
+  controls. No other desktop or mobile layout behavior changed.

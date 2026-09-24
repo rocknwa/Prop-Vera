@@ -132,10 +132,9 @@ export function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* USDC balance + mint — desktop only */}
+            {/* USDC faucet action — desktop only */}
             {mounted && isConnected && (
               <div className="hidden md:flex items-center gap-2">
-                <span className="text-xs text-muted font-medium">${usdcFormatted} USDC</span>
                 <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
                   title={hasInsufficientGas ? "Get test TCRO first — this faucet transaction requires gas" : "Mint 10,000 test USDC"}
                   className="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors whitespace-nowrap">
