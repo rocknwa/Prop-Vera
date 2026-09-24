@@ -223,3 +223,18 @@ environment with npm registry access.
   install then left `next`, `thirdweb`, and `viem` unavailable, so type-check and
   production-build retries fail on missing dependencies rather than source
   diagnostics.
+
+### Compact account menu follow-up
+
+- The separate desktop TCRO label, wallet address, and Disconnect control were
+  consolidated into one compact account button. Its two-line summary shows the
+  shared native-gas provider's TCRO balance above the shortened active thirdweb
+  address; Get USDC remains a separate navbar action.
+- Activating the account button opens a keyboard-dismissible, outside-click-aware
+  wallet panel containing the complete selectable address, the same TCRO balance,
+  the navbar's current USDC balance, Copy address with success/failure feedback,
+  and Disconnect wallet. Both in-app email/Google accounts and external wallets
+  use the same `useActiveAccount`/`useActiveWallet` branch.
+- The mobile drawer was not restructured and retains its existing address,
+  balances, role, Get USDC, and navigation sections. The compact account button
+  remains available in the mobile header for copying or disconnecting.

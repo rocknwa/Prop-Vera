@@ -136,7 +136,6 @@ export function Navbar() {
             {/* USDC balance + mint — desktop only */}
             {mounted && isConnected && (
               <div className="hidden md:flex items-center gap-2">
-                <span className="text-xs text-muted font-medium">{isGasLoading ? "—" : tcroBalance} TCRO</span>
                 <span className="text-xs text-muted font-medium">${usdcFormatted} USDC</span>
                 <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
                   title={hasInsufficientGas ? "Get test TCRO first — this faucet transaction requires gas" : "Mint 10,000 test USDC"}
@@ -148,7 +147,7 @@ export function Navbar() {
             )}
 
             {/* Wallet connect */}
-            <ConnectButtonClient />
+            <ConnectButtonClient usdcBalance={usdcFormatted} />
 
             {/* Hamburger — mobile only */}
             <button
