@@ -238,3 +238,12 @@ environment with npm registry access.
 - The mobile drawer was not restructured and retains its existing address,
   balances, role, Get USDC, and navigation sections. The compact account button
   remains available in the mobile header for copying or disconnecting.
+
+### Mobile drawer balance cleanup
+
+- Removed the duplicate TCRO and USDC readouts from the mobile drawer. The compact
+  account menu is now the single balance/details surface for the full address,
+  TCRO, USDC, copying, and disconnecting on both mobile and desktop.
+- The drawer's Get 10,000 Test USDC action, insufficient-gas explanation, role
+  badge, connected-address indicator, and navigation remain unchanged. The
+  desktop navbar and global TCRO onboarding warning were not modified.

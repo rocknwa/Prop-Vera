@@ -32,7 +32,6 @@ const ArrowsIcon   = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" he
 const DashIcon     = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>;
 const TagIcon      = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>;
 const ShieldIcon   = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-const CoinIcon     = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>;
 
 export function Navbar() {
   const pathname = usePathname();
@@ -40,7 +39,7 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mintMessage, setMintMessage] = useState("");
-  const { balanceLabel: tcroBalance, hasInsufficientGas, isLoading: isGasLoading } = useNativeGas();
+  const { hasInsufficientGas } = useNativeGas();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -198,21 +197,6 @@ export function Navbar() {
               <p className="text-xs text-muted font-mono truncate">
                 {address?.slice(0, 8)}...{address?.slice(-6)}
               </p>
-            </div>
-            {/* USDC balance */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-muted">
-                <CoinIcon />
-                <span className="text-xs font-medium">TCRO Balance</span>
-              </div>
-              <span className="text-sm font-bold text-foreground">{isGasLoading ? "—" : tcroBalance} TCRO</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-muted">
-                <CoinIcon />
-                <span className="text-xs font-medium">USDC Balance</span>
-              </div>
-              <span className="text-sm font-bold text-foreground">${usdcFormatted}</span>
             </div>
             {/* Role badges */}
             <div className="flex gap-1.5 flex-wrap">
