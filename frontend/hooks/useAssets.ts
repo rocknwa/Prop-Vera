@@ -1,4 +1,4 @@
- import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
+ import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "@/lib/thirdweb-hooks"
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI } from "@/lib/contracts"
 
 // ─────────────────────────────────────────────────────────────────────────────

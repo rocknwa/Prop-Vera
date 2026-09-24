@@ -1,5 +1,5 @@
-import { useReadContract } from "wagmi"
-import { useAccount } from "wagmi"
+import { useReadContract } from "@/lib/thirdweb-hooks"
+import { useAccount } from "@/lib/thirdweb-hooks"
 import {
   PROPVERA_CONTRACT_ADDRESS,
   PROPVERA_ABI,
@@ -116,7 +116,8 @@ export function useUserProfile() {
   const totalInvested =
     portfolio && portfolio.length > 0
       ? portfolio.reduce(
-          (sum, item) => sum + Number(item.investmentValueInEth),
+          (sum: number, item: { investmentValueInEth: bigint }) =>
+            sum + Number(item.investmentValueInEth),
           0
         )
       : 0

@@ -1,20 +1,22 @@
 "use client";
 
 import { ReactNode } from "react";
-import { WagmiProvider } from "wagmi";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { ThirdwebProvider } from "thirdweb/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { config } from "@/lib/wagmi";
-import "@rainbow-me/rainbowkit/styles.css";
+import { NativeGasProvider } from "@/lib/native-gas";
+import { NativeGasNotice } from "@/components/native-gas-notice";
 
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider config={config}>
+    <ThirdwebProvider>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+        <NativeGasProvider>
+          {children}
+          <NativeGasNotice />
+        </NativeGasProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </ThirdwebProvider>
   );
 }
