@@ -78,3 +78,39 @@ environment with npm registry access.
 - No file under `smart-contract/` or `indexer/` was modified.
 - Contract addresses, ABIs, token decimal conversions, and application business
   flows were not changed.
+
+## Native TCRO onboarding follow-up
+
+### Inspected and implemented
+
+- Re-inspected `frontend/lib/thirdweb.ts`, `frontend/components/connect-button-client.tsx`,
+  and `frontend/components/navbar.tsx`. Both thirdweb in-app email/Google wallets
+  and the existing external-wallet choices expose the same active account, while
+  the navbar's Get USDC button calls the on-chain `drip` function and therefore
+  requires native gas.
+- Added one app-level native-gas provider rather than page-specific checks. It
+  reads the active address's balance from the configured Cronos Testnet RPC with
+  viem `eth_getBalance` semantics on chain 338. A balance below 0.01 TCRO is
+  treated as insufficient for onboarding; this is a conservative UI threshold,
+  not a guarantee of the gas required by every possible transaction.
+- The provider re-fetches after an account changes and whenever the window gains
+  focus or the document becomes visible. The warning is derived directly from
+  the latest successful balance response, so it disappears when that response
+  reaches the threshold. No claim is made that the faucet itself reports back to
+  PropVera or that background refresh occurs while the tab remains hidden.
+- The responsive global notice shows the complete, manually selectable address.
+  Its primary action attempts to copy that address and opens the faucet, and it
+  reports clipboard success or failure. No address-prefill parameter is used.
+  Get USDC remains otherwise unchanged, but is disabled with an explicit gas
+  explanation while the TCRO warning is active.
+
+### Faucet verification and limitations
+
+- The configured URL is `https://cronos.org/faucet`, the Cronos-hosted test-token
+  faucet URL. No undocumented query parameter was added. Verification from this
+  implementation environment was attempted with both the web lookup tool and a
+  direct HTTPS request on 2026-09-24; the lookup service returned HTTP 401 and
+  the environment proxy returned HTTP 403, respectively. Consequently the URL
+  could not be opened end-to-end here and URL prefill support was **not** claimed.
+  The address stays visible and selectable if either the clipboard or faucet is
+  unavailable.

@@ -7,6 +7,7 @@ import { ConnectButtonClient } from "./connect-button-client";
 import { cn } from "@/lib/utils";
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI, MOCK_USDC_ADDRESS, MOCK_USDC_ABI, USDC_FAUCET_ADDRESS, USDC_FAUCET_ABI } from "@/lib/contracts";
 import { useEffect, useState } from "react";
+import { useNativeGas } from "@/lib/native-gas";
 
 // ── Icons (inline SVG — no extra deps) ──────────────────────────────────────
 const MenuIcon = () => (
@@ -39,6 +40,7 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mintMessage, setMintMessage] = useState("");
+  const { hasInsufficientGas } = useNativeGas();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -81,7 +83,7 @@ export function Navbar() {
   }, [mintSuccess, refetchUSDC]);
 
   const handleMintUSDC = () => {
-    if (!address) return;
+    if (!address || hasInsufficientGas) return;
     writeContract({ address: USDC_FAUCET_ADDRESS, abi: USDC_FAUCET_ABI, functionName: "drip" });
   };
 
@@ -135,11 +137,12 @@ export function Navbar() {
             {mounted && isConnected && (
               <div className="hidden md:flex items-center gap-2">
                 <span className="text-xs text-muted font-medium">${usdcFormatted} USDC</span>
-                <button onClick={handleMintUSDC} disabled={isMinting}
-                  title="Mint 10,000 test USDC"
+                <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
+                  title={hasInsufficientGas ? "Get test TCRO first — this faucet transaction requires gas" : "Mint 10,000 test USDC"}
                   className="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors whitespace-nowrap">
                   {isMinting ? "Minting..." : mintMessage || "🪙 Get USDC"}
                 </button>
+                {hasInsufficientGas && <span className="max-w-28 text-xs font-medium text-amber-700">TCRO required for gas</span>}
               </div>
             )}
 
@@ -213,7 +216,8 @@ export function Navbar() {
               )}
             </div>
             {/* Mint button */}
-            <button onClick={handleMintUSDC} disabled={isMinting}
+            {hasInsufficientGas && <p className="text-xs font-medium text-amber-700">Get test TCRO first. The USDC faucet transaction requires gas.</p>}
+            <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
               className="w-full py-2 text-xs font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors">
               {isMinting ? "Minting..." : mintMessage || "🪙 Get 10,000 Test USDC"}
             </button>
