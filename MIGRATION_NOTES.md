@@ -106,8 +106,8 @@ environment with npm registry access.
 
 ### Faucet verification and limitations
 
-- The configured URL is `https://cronos.org/faucet`, the Cronos-hosted test-token
-  faucet URL. No undocumented query parameter was added. Verification from this
+- The originally configured URL was `https://cronos.org/faucet`. No undocumented
+  query parameter was added. Verification from this
   implementation environment was attempted with both the web lookup tool and a
   direct HTTPS request on 2026-09-24; the lookup service returned HTTP 401 and
   the environment proxy returned HTTP 403, respectively. Consequently the URL
@@ -150,3 +150,23 @@ environment with npm registry access.
   reported from this run. The preceding onboarding commit had passed both checks
   before the environment's dependency tree was removed; this runtime fix still
   requires CI or an environment with registry access to repeat them.
+
+### Live TCRO balance follow-up
+
+- Live testing established that `https://cronos.org/faucet` returned 404. The
+  onboarding action now opens the supplied working Cronos faucet URL,
+  `https://faucet.cronos.com/`; the existing copy-address and manual-copy fallback
+  are unchanged, and no address-prefill query parameter is claimed or used.
+- The connected account control, desktop navbar balance group, and mobile drawer
+  now show TCRO alongside USDC. They all consume `balanceLabel` from the same
+  app-level `NativeGasProvider` value whose raw `balance` determines
+  `hasInsufficientGas`, so the displayed amount and warning cannot query different
+  addresses or data sources. Very small positive balances display as `<0.000001`
+  rather than incorrectly rounding to `0`.
+- The balance query key includes chain 338 and the current `useActiveAccount`
+  address. It is enabled only when that address exists, always re-fetches when
+  mounted after login/reconnection, gets a new query when the active address
+  changes, and re-fetches on window focus or document visibility after returning
+  from the faucet. These behaviors apply identically after email/Google in-app
+  login and external-wallet connection because both populate the same thirdweb
+  active-account hook.

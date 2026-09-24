@@ -6,7 +6,7 @@ import { createPublicClient, formatEther, http, parseEther } from "viem";
 import { useAccount } from "./thirdweb-hooks";
 import { cronosTestnet } from "./thirdweb";
 
-export const CRONOS_TESTNET_FAUCET_URL = "https://cronos.org/faucet";
+export const CRONOS_TESTNET_FAUCET_URL = "https://faucet.cronos.com/";
 export const MINIMUM_GAS_BALANCE = parseEther("0.01");
 
 const cronosPublicClient = createPublicClient({
@@ -23,6 +23,12 @@ type NativeGasContextValue = {
 
 const NativeGasContext = createContext<NativeGasContextValue | undefined>(undefined);
 
+function formatTCROBalance(balance?: bigint) {
+  if (balance === undefined) return "—";
+  if (balance > 0n && balance < 1_000_000_000_000n) return "<0.000001";
+  return Number(formatEther(balance)).toLocaleString(undefined, { maximumFractionDigits: 6 });
+}
+
 export function NativeGasProvider({ children }: { children: ReactNode }) {
   const { address, isConnected } = useAccount();
   const balanceQuery = useQuery({
@@ -30,6 +36,7 @@ export function NativeGasProvider({ children }: { children: ReactNode }) {
     enabled: Boolean(address),
     queryFn: () => cronosPublicClient.getBalance({ address: address! }),
     refetchOnWindowFocus: true,
+    refetchOnMount: "always",
     staleTime: 0,
   });
 
@@ -48,7 +55,7 @@ export function NativeGasProvider({ children }: { children: ReactNode }) {
   const balance = balanceQuery.data;
   const value = {
     balance,
-    balanceLabel: balance === undefined ? "—" : Number(formatEther(balance)).toLocaleString(undefined, { maximumFractionDigits: 6 }),
+    balanceLabel: formatTCROBalance(balance),
     hasInsufficientGas: isConnected && balance !== undefined && balance < MINIMUM_GAS_BALANCE,
     isLoading: isConnected && balanceQuery.isLoading,
     refetch: () => { void balanceQuery.refetch(); },

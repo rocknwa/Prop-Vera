@@ -40,7 +40,7 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mintMessage, setMintMessage] = useState("");
-  const { hasInsufficientGas } = useNativeGas();
+  const { balanceLabel: tcroBalance, hasInsufficientGas, isLoading: isGasLoading } = useNativeGas();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -136,6 +136,7 @@ export function Navbar() {
             {/* USDC balance + mint — desktop only */}
             {mounted && isConnected && (
               <div className="hidden md:flex items-center gap-2">
+                <span className="text-xs text-muted font-medium">{isGasLoading ? "—" : tcroBalance} TCRO</span>
                 <span className="text-xs text-muted font-medium">${usdcFormatted} USDC</span>
                 <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
                   title={hasInsufficientGas ? "Get test TCRO first — this faucet transaction requires gas" : "Mint 10,000 test USDC"}
@@ -200,6 +201,13 @@ export function Navbar() {
               </p>
             </div>
             {/* USDC balance */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-muted">
+                <CoinIcon />
+                <span className="text-xs font-medium">TCRO Balance</span>
+              </div>
+              <span className="text-sm font-bold text-foreground">{isGasLoading ? "—" : tcroBalance} TCRO</span>
+            </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-muted">
                 <CoinIcon />
