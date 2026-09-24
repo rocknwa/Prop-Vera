@@ -77,7 +77,7 @@ export function AssetCard({ asset, onInvest }: AssetCardProps) {
       </CardContent>
 
       <CardFooter className="gap-2">
-        <Link href={`/assets/${asset.id}`} className="flex-1">
+        <Link href={`/asset/${asset.id}`} className="flex-1">
           <Button variant="outline" className="w-full">
             View Details
           </Button>

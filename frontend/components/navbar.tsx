@@ -7,6 +7,7 @@ import { ConnectButtonClient } from "./connect-button-client";
 import { cn } from "@/lib/utils";
 import { PROPVERA_CONTRACT_ADDRESS, PROPVERA_ABI, MOCK_USDC_ADDRESS, MOCK_USDC_ABI, USDC_FAUCET_ADDRESS, USDC_FAUCET_ABI } from "@/lib/contracts";
 import { useEffect, useState } from "react";
+import { useNativeGas } from "@/lib/native-gas";
 
 // ── Icons (inline SVG — no extra deps) ──────────────────────────────────────
 const MenuIcon = () => (
@@ -31,7 +32,6 @@ const ArrowsIcon   = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" he
 const DashIcon     = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>;
 const TagIcon      = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>;
 const ShieldIcon   = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-const CoinIcon     = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>;
 
 export function Navbar() {
   const pathname = usePathname();
@@ -39,6 +39,7 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mintMessage, setMintMessage] = useState("");
+  const { hasInsufficientGas } = useNativeGas();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -81,7 +82,7 @@ export function Navbar() {
   }, [mintSuccess, refetchUSDC]);
 
   const handleMintUSDC = () => {
-    if (!address) return;
+    if (!address || hasInsufficientGas) return;
     writeContract({ address: USDC_FAUCET_ADDRESS, abi: USDC_FAUCET_ABI, functionName: "drip" });
   };
 
@@ -135,16 +136,17 @@ export function Navbar() {
             {mounted && isConnected && (
               <div className="hidden md:flex items-center gap-2">
                 <span className="text-xs text-muted font-medium">${usdcFormatted} USDC</span>
-                <button onClick={handleMintUSDC} disabled={isMinting}
-                  title="Mint 10,000 test USDC"
+                <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
+                  title={hasInsufficientGas ? "Get test TCRO first — this faucet transaction requires gas" : "Mint 10,000 test USDC"}
                   className="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors whitespace-nowrap">
                   {isMinting ? "Minting..." : mintMessage || "🪙 Get USDC"}
                 </button>
+                {hasInsufficientGas && <span className="max-w-28 text-xs font-medium text-amber-700">TCRO required for gas</span>}
               </div>
             )}
 
             {/* Wallet connect */}
-            <ConnectButtonClient />
+            <ConnectButtonClient usdcBalance={usdcFormatted} />
 
             {/* Hamburger — mobile only */}
             <button
@@ -196,14 +198,6 @@ export function Navbar() {
                 {address?.slice(0, 8)}...{address?.slice(-6)}
               </p>
             </div>
-            {/* USDC balance */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-muted">
-                <CoinIcon />
-                <span className="text-xs font-medium">USDC Balance</span>
-              </div>
-              <span className="text-sm font-bold text-foreground">${usdcFormatted}</span>
-            </div>
             {/* Role badges */}
             <div className="flex gap-1.5 flex-wrap">
               {showAdmin && (
@@ -213,7 +207,8 @@ export function Navbar() {
               )}
             </div>
             {/* Mint button */}
-            <button onClick={handleMintUSDC} disabled={isMinting}
+            {hasInsufficientGas && <p className="text-xs font-medium text-amber-700">Get test TCRO first. The USDC faucet transaction requires gas.</p>}
+            <button onClick={handleMintUSDC} disabled={isMinting || hasInsufficientGas}
               className="w-full py-2 text-xs font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors">
               {isMinting ? "Minting..." : mintMessage || "🪙 Get 10,000 Test USDC"}
             </button>
